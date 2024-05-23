@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
+import { User } from 'modules/user/user.model';
 
 
 @Module({
@@ -17,13 +18,12 @@ import { SequelizeModuleOptions } from '@nestjs/sequelize';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        models: [],
+        models: [User],
         autoLoadModels: true,
-        synchronize: true
+        synchronize: false
       }),
     }),
-
+    SequelizeModule.forFeature([User]),
   ],
 })
 export class AppModule {}
-

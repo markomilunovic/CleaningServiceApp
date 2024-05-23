@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: mysql
+      DB_HOST: ${DB_DIALECT}
       DB_PORT: ${DB_PORT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
