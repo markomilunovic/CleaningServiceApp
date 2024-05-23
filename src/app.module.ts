@@ -3,6 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { User } from 'modules/user/user.model';
+import { Worker } from 'modules/worker/worker.model';
 
 
 @Module({
@@ -18,12 +19,12 @@ import { User } from 'modules/user/user.model';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        models: [User],
+        models: [User, Worker],
         autoLoadModels: true,
         synchronize: false
       }),
     }),
-    SequelizeModule.forFeature([User]),
+    SequelizeModule.forFeature([User, Worker]),
   ],
 })
 export class AppModule {}
