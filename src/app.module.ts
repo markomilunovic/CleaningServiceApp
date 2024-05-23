@@ -5,6 +5,7 @@ import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { User } from 'modules/user/user.model';
 import { Worker } from 'modules/worker/worker.model';
 import { Job } from 'modules/job/job.model';
+import { Transaction } from 'modules/transaction/transaction.model';
 
 
 @Module({
@@ -20,12 +21,12 @@ import { Job } from 'modules/job/job.model';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        models: [User, Worker, Job],
+        models: [User, Worker, Job, Transaction],
         autoLoadModels: true,
         synchronize: false,
       }),
     }),
-    SequelizeModule.forFeature([User, Worker, Job]),
+    SequelizeModule.forFeature([User, Worker, Job, Transaction]),
   ],
 })
 export class AppModule {}
