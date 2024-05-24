@@ -6,6 +6,8 @@ import { User } from 'modules/user/user.model';
 import { Worker } from 'modules/worker/worker.model';
 import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';
+import { Message } from 'modules/message/message.model';
+import { AccessToken } from 'modules/auth/accessToken.model';
 
 
 @Module({
@@ -21,12 +23,12 @@ import { Transaction } from 'modules/transaction/transaction.model';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        models: [User, Worker, Job, Transaction],
+        models: [User, Worker, Job, Transaction, Message, AccessToken],
         autoLoadModels: true,
         synchronize: false,
       }),
     }),
-    SequelizeModule.forFeature([User, Worker, Job, Transaction]),
+    SequelizeModule.forFeature([User, Worker, Job, Transaction, Message, AccessToken]),
   ],
 })
 export class AppModule {}
