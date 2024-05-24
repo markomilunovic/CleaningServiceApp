@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { User } from "../user/user.model";
+import { User } from "modules/user/user.model";
 
 @Table({ tableName: 'verification_token' })
 export class VerificationToken extends Model<VerificationToken> {
