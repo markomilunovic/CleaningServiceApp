@@ -1,15 +1,14 @@
-import { UUID } from "crypto";
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { User } from "../user/user.model";
 
 @Table({ tableName: 'access_token' })
 export class AccessToken extends Model<AccessToken> {
     @Column({
-        type: DataType.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+        type: DataType.UUID,
+        primaryKey: true,
+        defaultValue: DataType.UUIDV4
     })
-    id: UUID;
+    id: string;
 
     @ForeignKey(() => User)
     @Column({
