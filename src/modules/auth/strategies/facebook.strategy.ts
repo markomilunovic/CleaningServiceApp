@@ -20,10 +20,29 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
 
     async validate(accessToken: string, refreshToken: string, profile: any, done: Function) {
         const { name, emails } = profile;
-        let user = await this.userService.findUserByEmail(emails[0].value);
+        
+        if (!emails || !emails.length) {
+            const user = await this.userService.registerUser({
+                firstName: name.givenName,
+                lastName: name.familyName,
+                email: '',
+                password: '',
+                address: '',
+                buildingNumber: 0,
+                floor: 0,
+                apartmentNumber: '',
+                city: '',
+                contactPhone: '',
+            });
+    
+            return done(null, user);
+        }
+    
+        const user = await this.userService.findUserByEmail(emails[0].value);
     
         if (!user) {
-            user = await this.userService.registerUser({
+
+            const newUser = await this.userService.registerUser({
                 firstName: name.givenName,
                 lastName: name.familyName,
                 email: emails[0].value,
@@ -35,8 +54,10 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
                 city: '',
                 contactPhone: '',
             });
+            return done(null, newUser);
         }
     
         done(null, user);
     }
+    
 }

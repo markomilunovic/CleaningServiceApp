@@ -16,14 +16,15 @@ export class AccessToken extends Model<AccessToken> {
         allowNull: false,
         field: 'user_id'
     })
-    user_id: number;
+    userId: number;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
         field: 'is_revoked'
     })
-    is_revoked: boolean;
+    isRevoked: boolean;
     
     @Column({
         type: DataType.DATE,
@@ -31,7 +32,7 @@ export class AccessToken extends Model<AccessToken> {
         defaultValue: DataType.NOW,
         field: 'created_at'
     })
-    created_at: Date;
+    createdAt: Date;
 
     @Column({
         type: DataType.DATE,
@@ -39,7 +40,7 @@ export class AccessToken extends Model<AccessToken> {
         defaultValue: DataType.NOW,
         field: 'updated_at'
     })
-    updated_at: Date;
+    updatedAt: Date;
 
     @Column({
         type: DataType.DATE,
@@ -47,5 +48,5 @@ export class AccessToken extends Model<AccessToken> {
         defaultValue: DataType.NOW,
         field: 'expires_at'
     })
-    expires_at: Date;
+    expiresAt: Date;
 };

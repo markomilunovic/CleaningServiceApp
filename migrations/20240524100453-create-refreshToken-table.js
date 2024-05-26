@@ -23,7 +23,8 @@ module.exports = {
 
       is_revoked: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: false,
       },
 
       created_at: {
