@@ -4,10 +4,10 @@ import { ConfigService } from '@nestjs/config';
 import { UserService } from '../user/user.service';
 import { AccessTokenRepository } from './repositories/access-token.repository';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
-import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/user.model';
 import { AuthResponse } from 'common/interfaces/auth-response.interface';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly refreshTokenRepository: RefreshTokenRepository,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User | null> {
+  async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findUserByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
       return user;
@@ -30,7 +30,16 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any): Promise<{ authResponse: AuthResponse }> { // Izmenjeno
+  async login(loginDto: LoginDto): Promise<{ authResponse: AuthResponse }> {
+    const user = await this.validateUser(loginDto.email, loginDto.password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return this.generateTokens(user);
+  }
+
+  async generateTokens(user: User): Promise<{ authResponse: AuthResponse }> {
     const accessTokenExpiresAt: Date = new Date();
     accessTokenExpiresAt.setDate(accessTokenExpiresAt.getDate() + this.ACCESS_TOKEN_EXP_TIME_IN_DAYS);
 

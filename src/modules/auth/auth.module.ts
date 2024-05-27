@@ -12,6 +12,7 @@ import { FacebookStrategy } from './strategies/facebook.strategy';
 import { AccessTokenRepository } from './repositories/access-token.repository';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   providers: [
     AuthService,
+    JwtStrategy,
     GoogleStrategy,
     FacebookStrategy,
     AccessTokenRepository,

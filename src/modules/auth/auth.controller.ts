@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,6 +19,9 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req) {
+    if (!req.user) {
+      throw new UnauthorizedException('No user data from Google');
+    }
     return this.authService.login(req.user);
   }
 
@@ -29,6 +32,9 @@ export class AuthController {
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
   async facebookAuthRedirect(@Req() req) {
+    if (!req.user) {
+      throw new UnauthorizedException('No user data from Facebook');
+    }
     return this.authService.login(req.user);
   }
 }

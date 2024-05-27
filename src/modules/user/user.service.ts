@@ -3,6 +3,7 @@ import { UserRepository } from './user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.model';
 import * as bcrypt from 'bcrypt';
+import { EditUserDto } from './dto/edit-user.dto';
 
 @Injectable()
 export class UserService {
@@ -24,5 +25,13 @@ export class UserService {
 
   async findUserByEmail(email: string): Promise<User> {
     return this.userRepository.findUserByEmail(email);
+  }
+
+  async findUserById(id: number): Promise<User> {
+    return this.userRepository.findUserById(id);
+  }
+
+  async updateUser(id: number, editUserDto: EditUserDto): Promise<User> {
+    return this.userRepository.updateUser(id, editUserDto);
   }
 }
