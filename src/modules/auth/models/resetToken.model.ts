@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { User } from "../user/user.model";
+import { User } from "../../user/user.model";
 
 @Table({ tableName: 'reset_token' })
 export class ResetToken extends Model<ResetToken> {

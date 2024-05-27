@@ -1,8 +1,8 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { User } from "../user/user.model";
+import { User } from "modules/user/user.model";
 
-@Table({ tableName: 'access_token' })
-export class AccessToken extends Model<AccessToken> {
+@Table({ tableName: 'verification_token' })
+export class VerificationToken extends Model<VerificationToken> {
     @Column({
         type: DataType.UUID,
         primaryKey: true,
