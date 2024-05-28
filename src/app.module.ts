@@ -3,7 +3,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { User } from 'modules/user/user.model';
-import { Worker } from 'modules/worker/worker.model';
+import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';
 import { Message } from 'modules/message/message.model';
@@ -12,6 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RefreshToken } from 'modules/auth/models/refreshToken.model';
 import { ResetToken } from 'modules/auth/models/resetToken.model';
 import { VerificationToken } from 'modules/auth/models/verificationToken.model';
+import { WorkerModule } from 'modules/worker/worker.module';
 
 
 @Module({
@@ -34,6 +35,7 @@ import { VerificationToken } from 'modules/auth/models/verificationToken.model';
     }),
     SequelizeModule.forFeature([User, Worker, Job, Transaction, Message, AccessToken, RefreshToken, ResetToken, VerificationToken]),
     AuthModule,
+    WorkerModule
   ],
 })
 export class AppModule {}

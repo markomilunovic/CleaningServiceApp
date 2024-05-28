@@ -56,17 +56,7 @@ module.exports = {
       verified_by_admin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-      },
-      created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
+      }
     });
   },
 

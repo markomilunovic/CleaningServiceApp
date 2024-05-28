@@ -87,19 +87,4 @@ export class Worker extends Model<Worker> {
   })
   verifiedByAdmin: boolean;
 
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-    field: 'created_at',
-  })
-  createdAt: Date;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: DataType.NOW,
-    field: 'updated_at',
-  })
-  updatedAt: Date;
-}
+};

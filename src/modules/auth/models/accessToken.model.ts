@@ -1,6 +1,6 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { User } from "modules/user/user.model";
-import { Worker } from "modules/worker/worker.model";
+import { Worker } from "modules/worker/models/worker.model";
 
 @Table({ tableName: 'access_token' })
 export class AccessToken extends Model<AccessToken> {
