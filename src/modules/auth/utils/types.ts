@@ -22,3 +22,18 @@ export type RegisteredWorkerType = {
     termsAccepted: boolean;
     verifiedByAdmin: boolean;
 };
+
+export type LoginWorkerType = {
+    email: string;
+    password: string;
+};
+
+export type RefreshTokneEncodeType = {
+    jti: string;
+    sub: string;
+};
+
+export type ResetTokneEncodeType = {
+    jti: number;
+    email: string;
+};

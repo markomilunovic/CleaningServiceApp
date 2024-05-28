@@ -11,7 +11,7 @@ module.exports = {
       },
 
       access_token_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'access_token',
@@ -23,19 +23,8 @@ module.exports = {
 
       is_revoked: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
-      },
-
-      created_at: {
-        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
-
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: false
       },
 
       expires_at: {

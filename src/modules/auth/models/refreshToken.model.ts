@@ -12,35 +12,20 @@ export class RefreshToken extends Model<RefreshToken> {
 
     @ForeignKey(() => AccessToken)
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.UUID,
         allowNull: false,
         field: 'access_token_id'
     })
-    access_token_id: number;
+    access_token_id: string;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
         field: 'is_revoked'
     })
     is_revoked: boolean;
     
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'created_at'
-    })
-    created_at: Date;
-
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'updated_at'
-    })
-    updated_at: Date;
-
     @Column({
         type: DataType.DATE,
         allowNull: false,

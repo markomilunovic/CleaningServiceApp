@@ -5,6 +5,7 @@ import { AuthWorkerRepository } from './repositories/authWorker.repository';
 import { GoogleWorkerStrategy } from './workerStrategies/googleWorker.strategy';
 import { ConfigService } from '@nestjs/config';
 import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strategy';
+import { WorkerTokenService } from './services/workerTokenService';
 
 @Module({
     controllers: [AuthWorkerController],
@@ -12,7 +13,8 @@ import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strate
                 AuthWorkerRepository, 
                 GoogleWorkerStrategy,
                 FacebookWorkerStrategy, 
-                ConfigService]
+                ConfigService, 
+                WorkerTokenService]
 })
 export class AuthModule {};
 

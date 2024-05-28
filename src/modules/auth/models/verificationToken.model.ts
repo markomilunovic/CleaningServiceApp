@@ -1,5 +1,6 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { User } from "modules/user/user.model";
+import { Worker } from "modules/worker/worker.model";
 
 @Table({ tableName: 'verification_token' })
 export class VerificationToken extends Model<VerificationToken> {
@@ -18,28 +19,21 @@ export class VerificationToken extends Model<VerificationToken> {
     })
     user_id: number;
 
+    @ForeignKey(() => Worker)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+        field: 'worker_id'
+    })
+    worker_id: number;
+
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
         field: 'is_revoked'
     })
     is_revoked: boolean;
-    
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'created_at'
-    })
-    created_at: Date;
-
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'updated_at'
-    })
-    updated_at: Date;
 
     @Column({
         type: DataType.DATE,

@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post, Req, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, InternalServerErrorException, Post, Req, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthWorkerService } from '../services/authWorker.service';
 import { RegisterWorkerDto } from '../dtos/registerWorker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
+import { LoginWorkerDto } from '../dtos/loginWorker.dto';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -92,6 +93,21 @@ export class AuthWorkerController {
         console.error('Error in facebookAuthRedirect method:', error);
         throw new InternalServerErrorException('Failed to authenticate using Facebook');
       };
+    };
+
+    @Post('worker/login')
+    @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+    async loginWorker(@Body() loginWorkerDto: LoginWorkerDto): Promise<{ accessToken: string; refreshToken: string; worker: object }> {
+
+      try {
+
+        const {accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerDto);
+        return { accessToken, refreshToken, worker };
+
+      } catch (error) {
+        throw new HttpException('Error logging in', HttpStatus.INTERNAL_SERVER_ERROR);
+      };
+
     };
 
 
