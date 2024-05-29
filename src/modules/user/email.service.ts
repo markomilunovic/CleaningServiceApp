@@ -18,6 +18,10 @@ export class EmailService {
     });
   }
 
+  async sendMail(mailOptions: nodemailer.SendMailOptions) {
+    await this.transporter.sendMail(mailOptions);
+  }
+
   async sendResetPasswordEmail(to: string, token: string) {
     const url = `${this.configService.get<string>('FRONTEND_URL')}/api/user/confirm-reset-password?token=${token}`;
     const mailOptions = {
@@ -27,6 +31,6 @@ export class EmailService {
       text: `Please use the following link to reset your password: ${url}`,
     };
 
-    await this.transporter.sendMail(mailOptions);
+    await this.sendMail(mailOptions);
   }
 }

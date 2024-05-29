@@ -1,5 +1,6 @@
 import {
-  Injectable, ConflictException, InternalServerErrorException, NotFoundException
+  Injectable, ConflictException, InternalServerErrorException, NotFoundException,
+  Inject
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,6 +10,7 @@ import { EditUserDto } from './dto/edit-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
+import { EmailVerificationService } from './email-verification.service';
 
 @Injectable()
 export class UserService {
@@ -16,9 +18,11 @@ export class UserService {
 
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService,
+    @Inject('RESET_JWT_SERVICE')
+    private readonly resetJwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
+    private readonly emailVerificationService: EmailVerificationService,
   ) {}
 
   async registerUser(createUserDto: CreateUserDto): Promise<User> {
@@ -29,7 +33,10 @@ export class UserService {
 
     try {
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-      return this.userRepository.createUser({ ...createUserDto, password: hashedPassword });
+      const user = await this.userRepository.createUser({ ...createUserDto, password: hashedPassword });
+      const verificationToken = await this.emailVerificationService.generateVerificationToken(user);
+      await this.emailVerificationService.sendVerificationEmail(user, verificationToken);
+      return user;
     } catch (error) {
       throw new InternalServerErrorException('Error registering user.');
     }
@@ -84,7 +91,7 @@ export class UserService {
         sub: user.id,
       };
 
-      const resetTokenString = this.jwtService.sign(resetTokenEncode, {
+      const resetTokenString = this.resetJwtService.sign(resetTokenEncode, {
         secret: this.configService.get<string>('RESET_TOKEN_SECRET')!,
         expiresIn: `${this.RESET_TOKEN_EXP_TIME_IN_HOURS}h`,
       });
@@ -97,7 +104,9 @@ export class UserService {
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     try {
-      const decodedToken = this.jwtService.verify(token);
+      const decodedToken = this.resetJwtService.verify(token, {
+        secret: this.configService.get<string>('RESET_TOKEN_SECRET')
+      });
       const userId = decodedToken.sub;
 
       const resetToken = await this.userRepository.findResetToken(userId);
@@ -107,7 +116,7 @@ export class UserService {
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       await this.userRepository.updateUserPassword(userId, hashedPassword);
-      await this.userRepository.revokeResetToken(token);
+      await this.userRepository.revokeResetToken(resetToken.id);
     } catch (error) {
       throw new InternalServerErrorException('Error resetting password.');
     }
