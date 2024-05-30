@@ -9,15 +9,20 @@ import { EditUserDto } from './dto/edit-user.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ConfirmResetPasswordDto } from './dto/confirm-reset-password.dto';
 import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
+import { EmailVerificationService } from './email-verification.service';
 
 @Controller('api/user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly emailVerificationService: EmailVerificationService
+  ) {}
 
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     try {
-      return await this.userService.registerUser(createUserDto);
+      const user = await this.userService.registerUser(createUserDto);
+      return { message: 'User registered. Verification email sent.' };
     } catch (error) {
       if (error instanceof ConflictException) {
         throw new BadRequestException(error.message);
@@ -72,6 +77,16 @@ export class UserController {
         confirmResetPasswordDto.newPassword,
       );
       return { message: 'Password successfully reset.' };
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Post('verify')
+  async verifyEmail(@Query('token') token: string) {
+    try {
+      await this.emailVerificationService.verifyToken(token);
+      return { message: 'Email successfully verified.' };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
