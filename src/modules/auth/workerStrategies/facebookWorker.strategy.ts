@@ -17,25 +17,25 @@ export class FacebookWorkerStrategy extends PassportStrategy(Strategy, 'facebook
       profileFields: ['id', 'emails', 'name'], // Request the necessary profile fields
       scope: ['email'], // Request email permission
     });
-  }
+  };
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<any> {
+
     const { name, emails } = profile;
 
-    // Ensure emails array is defined and has at least one element
     if (!emails || emails.length === 0) {
-      return done(new Error('No email found in the user profile'), false);
-    }
+      return done(new Error('No email found in the worker profile'), false);
+    };
 
     const email = emails[0].value;
     const firstName = name?.givenName || '';
     const lastName = name?.familyName || '';
 
     try {
-      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName); // Reuse the same method
+      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName); 
       done(null, worker);
     } catch (error) {
       done(error, false);
-    }
-  }
-}
+    };
+  };
+};

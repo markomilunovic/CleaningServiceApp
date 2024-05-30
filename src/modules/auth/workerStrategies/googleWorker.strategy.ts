@@ -18,11 +18,12 @@ export class GoogleWorkerStrategy extends PassportStrategy(Strategy, 'google') {
     });
   };
 
-  async validate(profile: Profile, done: VerifyCallback): Promise<any> {
+  async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<any> {
+
     const { name, emails } = profile;
 
     if (!emails || emails.length === 0) {
-      return done(new Error('No email found in the user profile'), false);
+      return done(new Error('No email found in the worker profile'), false);
     };
 
     const email = emails[0].value;
@@ -30,7 +31,7 @@ export class GoogleWorkerStrategy extends PassportStrategy(Strategy, 'google') {
     const lastName = name?.familyName || '';
 
     try {
-      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName);
+      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName); 
       done(null, worker);
     } catch (error) {
       done(error, false);

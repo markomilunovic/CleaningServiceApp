@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, InternalServerErrorException, Post, Req, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, InternalServerErrorException, Post, Req, UnauthorizedException, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthWorkerService } from '../services/authWorker.service';
 import { RegisterWorkerDto } from '../dtos/registerWorker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -32,7 +32,7 @@ export class AuthWorkerController {
         })
     }))
     async registerWorker(@UploadedFiles() files: Express.Multer.File[], @Body() registerWorkerDto: RegisterWorkerDto): Promise<object> {
-
+      console.log('registerWorker - registerWorkerDto:', registerWorkerDto);
         try{
 
             if (files.length !== 2) {
@@ -53,52 +53,61 @@ export class AuthWorkerController {
         };
     };
 
+
     @Get('google')
     @UseGuards(AuthGuard('google'))
-    async googleAuth(@Req() req) {
-        // Initiates the Google OAuth2 login flow
-    };
+    async googleAuth(@Req() req) {};
 
     @Get('google/redirect')
     @UseGuards(AuthGuard('google'))
     async googleAuthRedirect(@Req() req) {
-      try {
-        const { worker } = req;
-        return {
-          message: 'Google authentication successful',
-          worker,
+        if (!req.user) {
+            throw new UnauthorizedException('No worker data from Google');
         };
-      } catch (error) {
-        console.error('Error in googleAuthRedirect method:', error);
-        throw new InternalServerErrorException('Failed to authenticate using Google');
-      };
+
+        const loginWorkerType = {
+            email: req.user.email,
+            password: null // No password for OAuth logins
+        };
+
+        const { accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerType);
+        return {
+            message: 'Google authentication successful',
+            accessToken,
+            refreshToken,
+            worker
+        };
     };
 
     @Get('facebook')
     @UseGuards(AuthGuard('facebook'))
-    async facebookAuth(@Req() req) {
-        // Initiates the Facebook OAuth2 login flow
-    };
+    async facebookAuth(@Req() req) {}
 
     @Get('facebook/redirect')
     @UseGuards(AuthGuard('facebook'))
     async facebookAuthRedirect(@Req() req) {
-      try {
-        const { worker } = req;
-        return {
-          message: 'Facebook authentication successful',
-          worker,
-        };
-      } catch (error) {
-        console.error('Error in facebookAuthRedirect method:', error);
-        throw new InternalServerErrorException('Failed to authenticate using Facebook');
-      };
+      if (!req.user) {
+        throw new UnauthorizedException('No worker data from Google');
+    };
+
+    const loginWorkerType = {
+        email: req.user.email,
+        password: null // No password for OAuth logins
+    };
+
+    const { accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerType);
+    return {
+        message: 'Facebook authentication successful',
+        accessToken,
+        refreshToken,
+        worker
+    };
     };
 
     @Post('worker/login')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     async loginWorker(@Body() loginWorkerDto: LoginWorkerDto): Promise<{ accessToken: string; refreshToken: string; worker: object }> {
-
+      console.log('loginWorker - loginWorkerDto:', loginWorkerDto);
       try {
 
         const {accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerDto);
