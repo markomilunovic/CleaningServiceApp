@@ -13,6 +13,7 @@ import { AccessTokenRepository } from './repositories/access-token.repository';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { ResetToken } from './models/resetToken.model';
 
 @Module({
   imports: [
