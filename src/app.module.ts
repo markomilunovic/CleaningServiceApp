@@ -12,18 +12,19 @@ import { RefreshToken } from 'modules/auth/models/refreshToken.model';
 import { ResetToken } from 'modules/auth/models/resetToken.model';
 import { VerificationToken } from 'modules/auth/models/verificationToken.model';
 import { AuthModule } from 'modules/auth/auth.module';
-
+import { AppController } from './app.controller';
+import { AppService } from 'app.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), 
+    ConfigModule.forRoot(),
     SequelizeModule.forRootAsync({
-      imports: [ConfigModule], 
-      inject: [ConfigService], 
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (configService: ConfigService): SequelizeModuleOptions => ({
-        dialect: configService.get<any>('DB_DIALECT'), 
+        dialect: configService.get<any>('DB_DIALECT'),
         host: configService.get<string>('DB_HOST'),
-        port: parseInt(configService.get<string>('DB_PORT'), 10), 
+        port: parseInt(configService.get<string>('DB_PORT'), 10),
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
@@ -34,5 +35,7 @@ import { AuthModule } from 'modules/auth/auth.module';
     }),
     AuthModule,
   ],
+  providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}
