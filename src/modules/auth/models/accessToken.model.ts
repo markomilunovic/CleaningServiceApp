@@ -1,8 +1,8 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { AccessToken } from "./accessToken.model";
+import { User } from "modules/user/user.model";
 
-@Table({ tableName: 'refresh_token' })
-export class RefreshToken extends Model<RefreshToken> {
+@Table({ tableName: 'access_token' })
+export class AccessToken extends Model<AccessToken> {
     @Column({
         type: DataType.UUID,
         primaryKey: true,
@@ -10,13 +10,13 @@ export class RefreshToken extends Model<RefreshToken> {
     })
     id: string;
 
-    @ForeignKey(() => AccessToken)
+    @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
-        field: 'access_token_id'
+        field: 'user_id'
     })
-    access_token_id: number;
+    user_id: number;
 
     @Column({
         type: DataType.BOOLEAN,

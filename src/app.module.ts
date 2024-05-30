@@ -7,7 +7,11 @@ import { Worker } from 'modules/worker/worker.model';
 import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';
 import { Message } from 'modules/message/message.model';
-import { AccessToken } from 'modules/auth/accessToken.model';
+import { AccessToken } from 'modules/auth/models/accessToken.model';
+import { RefreshToken } from 'modules/auth/models/refreshToken.model';
+import { ResetToken } from 'modules/auth/models/resetToken.model';
+import { VerificationToken } from 'modules/auth/models/verificationToken.model';
+import { AuthModule } from 'modules/auth/auth.module';
 
 
 @Module({
@@ -23,12 +27,12 @@ import { AccessToken } from 'modules/auth/accessToken.model';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        models: [User, Worker, Job, Transaction, Message, AccessToken],
+        models: [User, Worker, Job, Transaction, Message, AccessToken, RefreshToken, ResetToken, VerificationToken],
         autoLoadModels: true,
         synchronize: false,
       }),
     }),
-    SequelizeModule.forFeature([User, Worker, Job, Transaction, Message, AccessToken]),
+    AuthModule,
   ],
 })
 export class AppModule {}
