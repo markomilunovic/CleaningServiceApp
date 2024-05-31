@@ -1,4 +1,15 @@
 import { Module } from '@nestjs/common';
+<<<<<<< HEAD
+import { AuthWorkerController } from './controllers/auth.controller';
+import { AuthWorkerService } from './services/authWorker.service';
+import { AuthWorkerRepository } from './repositories/authWorker.repository';
+
+@Module({
+    controllers: [AuthWorkerController],
+    providers: [AuthWorkerService, AuthWorkerRepository]
+})
+export class AuthModule {};
+=======
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -41,3 +52,4 @@ import { ResetToken } from './models/resetToken.model';
   controllers: [AuthController],
 })
 export class AuthModule {}
+>>>>>>> develop
