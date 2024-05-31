@@ -14,7 +14,6 @@ import { ResetToken } from 'modules/auth/models/resetToken.model';
 import { VerificationToken } from 'modules/auth/models/verificationToken.model';
 import { WorkerModule } from 'modules/worker/worker.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(), 

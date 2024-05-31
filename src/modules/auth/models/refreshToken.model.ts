@@ -16,15 +16,15 @@ export class RefreshToken extends Model<RefreshToken> {
         allowNull: false,
         field: 'access_token_id'
     })
-    access_token_id: string;
+    accessTokenId: string;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
         defaultValue: false,
         field: 'is_revoked'
-    })
-    is_revoked: boolean;
+      })
+    isRevoked: boolean;
     
     @Column({
         type: DataType.DATE,
@@ -32,5 +32,5 @@ export class RefreshToken extends Model<RefreshToken> {
         defaultValue: DataType.NOW,
         field: 'expires_at'
     })
-    expires_at: Date;
+    expiresAt: Date;
 };
