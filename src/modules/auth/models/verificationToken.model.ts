@@ -48,4 +48,4 @@ export class VerificationToken extends Model<VerificationToken> {
     field: 'expires_at',
   })
   expiresAt: Date;
-}
+};

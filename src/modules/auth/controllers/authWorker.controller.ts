@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, InternalServerErrorException, Post, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, InternalServerErrorException, Post, Req, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthWorkerService } from '../services/authWorker.service';
 import { RegisterWorkerDto } from '../dtos/registerWorker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { AuthGuard } from '@nestjs/passport';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -50,4 +51,50 @@ export class AuthWorkerController {
             throw new InternalServerErrorException('Error registering worker');
         };
     };
+
+    @Get('google')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth(@Req() req) {
+        // Initiates the Google OAuth2 login flow
+    };
+
+    @Get('google/redirect')
+    @UseGuards(AuthGuard('google'))
+    async googleAuthRedirect(@Req() req) {
+      try {
+        const { worker } = req;
+        return {
+          message: 'Google authentication successful',
+          worker,
+        };
+      } catch (error) {
+        console.error('Error in googleAuthRedirect method:', error);
+        throw new InternalServerErrorException('Failed to authenticate using Google');
+      };
+    };
+
+    @Get('facebook')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookAuth(@Req() req) {
+        // Initiates the Facebook OAuth2 login flow
+    };
+
+    @Get('facebook/redirect')
+    @UseGuards(AuthGuard('facebook'))
+    async facebookAuthRedirect(@Req() req) {
+      try {
+        const { worker } = req;
+        return {
+          message: 'Facebook authentication successful',
+          worker,
+        };
+      } catch (error) {
+        console.error('Error in facebookAuthRedirect method:', error);
+        throw new InternalServerErrorException('Failed to authenticate using Facebook');
+      };
+    };
+
+
 };
+
+

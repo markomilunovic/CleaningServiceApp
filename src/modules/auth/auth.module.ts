@@ -17,6 +17,8 @@ import { RefreshTokenRepository } from './repositories/refresh-token.repository'
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ResetToken } from './models/resetToken.model';
+import { GoogleWorkerStrategy } from './workerStrategies/googleWorker.strategy';
+import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strategy';
 
 @Module({
   imports: [
@@ -43,6 +45,11 @@ import { ResetToken } from './models/resetToken.model';
     FacebookStrategy,
     AccessTokenRepository,
     RefreshTokenRepository,
-  ],
+    AuthWorkerService, 
+    AuthWorkerRepository, 
+    GoogleWorkerStrategy,
+    FacebookWorkerStrategy, 
+    ConfigService
+  ]
 })
 export class AuthModule {}
