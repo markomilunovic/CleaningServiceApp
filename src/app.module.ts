@@ -13,7 +13,6 @@ import { RefreshToken } from 'modules/auth/models/refreshToken.model';
 import { ResetToken } from 'modules/auth/models/resetToken.model';
 import { VerificationToken } from 'modules/auth/models/verificationToken.model';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(), 

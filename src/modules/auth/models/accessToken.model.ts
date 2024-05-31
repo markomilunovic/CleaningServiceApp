@@ -17,7 +17,7 @@ export class AccessToken extends Model<AccessToken> {
         allowNull: true,
         field: 'user_id'
     })
-    user_id: number;
+    userId: number;
 
     @ForeignKey(() => Worker)
     @Column({
@@ -25,7 +25,7 @@ export class AccessToken extends Model<AccessToken> {
         allowNull: true,
         field: 'worker_id'
     })
-    worker_id: number;
+    workerId: number;
 
     @Column({
         type: DataType.BOOLEAN,
@@ -33,7 +33,7 @@ export class AccessToken extends Model<AccessToken> {
         defaultValue: false,
         field: 'is_revoked'
     })
-    is_revoked: boolean;
+    isRevoked: boolean;
 
     @Column({
         type: DataType.DATE,
@@ -41,5 +41,5 @@ export class AccessToken extends Model<AccessToken> {
         defaultValue: DataType.NOW,
         field: 'expires_at'
     })
-    expires_at: Date;
+    expiresAt: Date;
 };
