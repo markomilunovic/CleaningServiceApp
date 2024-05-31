@@ -1,5 +1,9 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
+<<<<<<< HEAD
 import { User } from "../../user/user.model";
+=======
+import { User } from "modules/user/user.model";
+>>>>>>> develop
 
 @Table({ tableName: 'reset_token' })
 export class ResetToken extends Model<ResetToken> {
@@ -16,14 +20,15 @@ export class ResetToken extends Model<ResetToken> {
         allowNull: false,
         field: 'user_id'
     })
-    user_id: number;
+    userId: number;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
         field: 'is_revoked'
     })
-    is_revoked: boolean;
+    isRevoked: boolean;
     
     @Column({
         type: DataType.DATE,
@@ -31,7 +36,7 @@ export class ResetToken extends Model<ResetToken> {
         defaultValue: DataType.NOW,
         field: 'created_at'
     })
-    created_at: Date;
+    createdAt: Date;
 
     @Column({
         type: DataType.DATE,
@@ -39,7 +44,7 @@ export class ResetToken extends Model<ResetToken> {
         defaultValue: DataType.NOW,
         field: 'updated_at'
     })
-    updated_at: Date;
+    updatedAt: Date;
 
     @Column({
         type: DataType.DATE,
@@ -47,5 +52,5 @@ export class ResetToken extends Model<ResetToken> {
         defaultValue: DataType.NOW,
         field: 'expires_at'
     })
-    expires_at: Date;
+    expiresAt: Date;
 };
