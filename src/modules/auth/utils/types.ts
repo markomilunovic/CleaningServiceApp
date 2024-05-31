@@ -23,6 +23,19 @@ export type WorkerNoPasswordType = {
     verifiedByAdmin: boolean;
 };
 
+export type UserNoPasswordType = {
+    id?: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+    buildingNumber: number;
+    floor: number;
+    apartmentNumber: string;
+    city: string;
+    contactPhone: string;
+  };
+
 export type LoginWorkerType = {
     email: string;
     password: string;

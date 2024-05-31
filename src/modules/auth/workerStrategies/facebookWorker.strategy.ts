@@ -12,21 +12,20 @@ export class FacebookWorkerStrategy extends PassportStrategy(Strategy, 'facebook
     private readonly configService: ConfigService,
   ) {
     super({
-      clientID: configService.get<string>('FACEBOOK_CLIENT_ID'),
-      clientSecret: configService.get<string>('FACEBOOK_CLIENT_SECRET'),
+      clientID: configService.get<string>('FACEBOOK_APP_ID'),  // Adjusted to match .env file
+      clientSecret: configService.get<string>('FACEBOOK_APP_SECRET'),  // Adjusted to match .env file
       callbackURL: configService.get<string>('FACEBOOK_CALLBACK_URL'),
       profileFields: ['id', 'emails', 'name'], // Request the necessary profile fields
       scope: ['email'], // Request email permission
     });
-  };
+  }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<any> {
-
     const { name, emails } = profile;
 
     if (!emails || emails.length === 0) {
       return done(new Error('No email found in the worker profile'), false);
-    };
+    }
 
     const email = emails[0].value;
     const firstName = name?.givenName || '';
@@ -37,6 +36,6 @@ export class FacebookWorkerStrategy extends PassportStrategy(Strategy, 'facebook
       done(null, worker);
     } catch (error) {
       done(error, false);
-    };
-  };
-};
+    }
+  }
+}

@@ -58,7 +58,7 @@ export class AuthWorkerController {
     @UseGuards(AuthGuard('google'))
     async googleAuth(@Req() req) {};
 
-    @Get('google/redirect')
+    @Get('google/callback')
     @UseGuards(AuthGuard('google'))
     async googleAuthRedirect(@Req() req) {
         if (!req.user) {
@@ -83,7 +83,7 @@ export class AuthWorkerController {
     @UseGuards(AuthGuard('facebook'))
     async facebookAuth(@Req() req) {}
 
-    @Get('facebook/redirect')
+    @Get('facebook/callback')
     @UseGuards(AuthGuard('facebook'))
     async facebookAuthRedirect(@Req() req) {
       if (!req.user) {

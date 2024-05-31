@@ -1,42 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth20';
-import { UserService } from 'modules/user/user.service';
+import { AuthUserService } from '../services/auth-user.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-    constructor(
-        private readonly userService: UserService,
-        configService: ConfigService,
-    ) {
-        super({
-          clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
-          clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-          callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
-          scope: ['profile', 'email'],
-        });
+  constructor(
+    private readonly authService: AuthUserService,
+    configService: ConfigService,
+  ) {
+    super({
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
+      scope: ['profile', 'email'],
+    });
+  }
+
+  async validate(accessToken: string, refreshToken: string, profile: any, done: Function) {
+    const { name, emails } = profile;
+
+    if (!emails || emails.length === 0) {
+      return done(new Error('No email found in the profile'), false);
     }
 
-    async validate(accessToken: string, refreshToken: string, profile: any, done: Function) {
-        const { name, emails } = profile;
-        let user = await this.userService.findUserByEmail(emails[0].value);
-    
-        if (!user) {
-            user = await this.userService.registerUser({
-                firstName: name.givenName,
-                lastName: name.familyName,
-                email: emails[0].value,
-                password: '',
-                address: '',
-                buildingNumber: 0,
-                floor: 0,
-                apartmentNumber: '',
-                city: '',
-                contactPhone: '',
-            });
-        }
-    
-        done(null, user);
+    const email = emails[0].value;
+    const firstName = name?.givenName || '';
+    const lastName = name?.familyName || '';
+
+    try {
+      const user = await this.authService.registerOrLoginOauth2(email, firstName, lastName);
+      done(null, user);
+    } catch (error) {
+      console.error('Error validating user:', error);
+      done(error, false);
     }
+  }
 }

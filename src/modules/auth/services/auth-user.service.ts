@@ -7,6 +7,7 @@ import { RefreshTokenRepository } from '../repositories/refresh-token.repository
 import * as bcrypt from 'bcrypt';
 import { User } from 'modules/user/user.model';
 import { AuthResponse } from 'common/interfaces/auth-response.interface';
+import { UserNoPasswordType } from '../utils/types';
 
 @Injectable()
 export class AuthUserService {
@@ -30,6 +31,29 @@ export class AuthUserService {
       }
     }
     return null;
+  }
+
+  async registerOrLoginOauth2(email: string, firstName: string, lastName: string): Promise<UserNoPasswordType> {
+    let user = await this.userService.findUserByEmail(email);
+
+    if (!user) {
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        password: '',
+        address: '',
+        buildingNumber: 0,
+        floor: 0,
+        apartmentNumber: '',
+        city: '',
+        contactPhone: '',
+      };
+
+      user = await this.userService.registerUser(userData);
+    }
+
+    return user;
   }
 
   async generateTokens(user: User): Promise<AuthResponse> {
