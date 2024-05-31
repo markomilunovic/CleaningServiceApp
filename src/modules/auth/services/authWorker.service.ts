@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { AuthWorkerRepository } from '../repositories/authWorker.repository';
 import { LoginWorkerType, RegisterWorkerType, RegisteredWorkerType } from '../utils/types';
 import * as bcrypt from 'bcrypt';
-import { Worker } from 'modules/worker/worker.model';
+import { Worker } from 'modules/worker/models/worker.model';
 import { ConfigService } from '@nestjs/config';
 import { WorkerTokenService } from './workerTokenService';
 
@@ -35,7 +35,7 @@ export class AuthWorkerService {
         
     };
 
-    async registerOrLoginWithGoogle(email: string, firstName: string, lastName: string): Promise<RegisteredWorkerType> {
+    async registerOrLoginOauth2(email: string, firstName: string, lastName: string): Promise<RegisteredWorkerType> {
         
         let worker = await this.authWorkerRepository.findWorkerByEmail(email);
     

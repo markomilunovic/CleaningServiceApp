@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { RefreshTokneEncodeType, ResetTokneEncodeType } from '../utils/types';
-import { Worker } from 'modules/worker/worker.model';
+import { Worker } from 'modules/worker/models/worker.model';
 
 
 @Injectable()

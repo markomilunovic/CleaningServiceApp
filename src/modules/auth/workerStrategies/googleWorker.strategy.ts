@@ -30,7 +30,7 @@ export class GoogleWorkerStrategy extends PassportStrategy(Strategy, 'google') {
     const lastName = name?.familyName || '';
 
     try {
-      const worker = await this.authWorkerService.registerOrLoginWithGoogle(email, firstName, lastName);
+      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName);
       done(null, worker);
     } catch (error) {
       done(error, false);

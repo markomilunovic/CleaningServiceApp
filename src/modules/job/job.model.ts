@@ -1,6 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { User } from 'modules/user/user.model';
-import { Worker } from 'modules/worker/worker.model';
+import { Worker } from 'modules/worker/models/worker.model';
 
 @Table({ tableName: 'job' })
 export class Job extends Model<Job> {

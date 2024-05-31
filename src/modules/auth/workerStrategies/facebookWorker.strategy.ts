@@ -32,7 +32,7 @@ export class FacebookWorkerStrategy extends PassportStrategy(Strategy, 'facebook
     const lastName = name?.familyName || '';
 
     try {
-      const worker = await this.authWorkerService.registerOrLoginWithGoogle(email, firstName, lastName); // Reuse the same method
+      const worker = await this.authWorkerService.registerOrLoginOauth2(email, firstName, lastName); // Reuse the same method
       done(null, worker);
     } catch (error) {
       done(error, false);

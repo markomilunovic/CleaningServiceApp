@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterWorkerType } from '../utils/types';
-import { Worker } from 'modules/worker/worker.model';
+import { Worker } from 'modules/worker/models/worker.model';
 import { AccessToken } from '../models/accessToken.model';
 import { RefreshToken } from '../models/refreshToken.model';
 
