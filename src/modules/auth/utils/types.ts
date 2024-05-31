@@ -8,7 +8,7 @@ export type RegisterWorkerType = {
     municipalities: object;
 };
 
-export type RegisteredWorkerType = {
+export type WorkerNoPasswordType = {
     id?: number
     firstName: string;
     lastName: string;

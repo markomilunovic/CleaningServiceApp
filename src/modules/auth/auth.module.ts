@@ -20,6 +20,7 @@ import { ResetToken } from './models/resetToken.model';
 import { GoogleWorkerStrategy } from './workerStrategies/googleWorker.strategy';
 import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strategy';
 import { WorkerTokenService } from './services/workerTokenService';
+import { VerificationToken } from './models/verificationToken.model';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { WorkerTokenService } from './services/workerTokenService';
       }),
       inject: [ConfigService],
     }),
-    SequelizeModule.forFeature([AccessToken, RefreshToken, ResetToken]),
+    SequelizeModule.forFeature([AccessToken, RefreshToken, ResetToken, VerificationToken]),
   ],
   controllers: [AuthWorkerController, AuthUserController],
   providers: [

@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthWorkerRepository } from '../repositories/authWorker.repository';
-import { LoginWorkerType, RegisterWorkerType, RegisteredWorkerType } from '../utils/types';
+import { LoginWorkerType, RegisterWorkerType, WorkerNoPasswordType } from '../utils/types';
 import * as bcrypt from 'bcrypt';
 import { Worker } from 'modules/worker/models/worker.model';
 import { ConfigService } from '@nestjs/config';
 import { WorkerTokenService } from './workerTokenService';
+import { workerPasswordFilter } from '../utils/workerPasswordFilter.util';
 
 @Injectable()
 export class AuthWorkerService {
@@ -14,7 +15,7 @@ export class AuthWorkerService {
       private workerTokenService: WorkerTokenService
     ) {}
 
-    async registerWorker(registerWorkerType: RegisterWorkerType, frontPhotoPath: string, backPhotoPath: string): Promise<RegisteredWorkerType> {
+    async registerWorker(registerWorkerType: RegisterWorkerType, frontPhotoPath: string, backPhotoPath: string): Promise<WorkerNoPasswordType> {
         
         const { email, password } = registerWorkerType;
 
@@ -31,11 +32,11 @@ export class AuthWorkerService {
 
         const worker = await this.authWorkerRepository.register(workerData, frontPhotoPath, backPhotoPath);
 
-        return this.mapWorkerToRegisteredWorker(worker);
+        return workerPasswordFilter(worker);
         
     };
 
-    async registerOrLoginOauth2(email: string, firstName: string, lastName: string): Promise<RegisteredWorkerType> {
+    async registerOrLoginOauth2(email: string, firstName: string, lastName: string): Promise<WorkerNoPasswordType> {
         
         let worker = await this.authWorkerRepository.findWorkerByEmail(email);
     
@@ -59,29 +60,12 @@ export class AuthWorkerService {
           worker = await this.authWorkerRepository.register(workerData, '', '');
         };
     
-        return this.mapWorkerToRegisteredWorker(worker);
-
-      };
-    
-      private mapWorkerToRegisteredWorker(worker: Worker): RegisteredWorkerType {
-        return {
-          id: worker.id,
-          firstName: worker.firstName,
-          lastName: worker.lastName,
-          email: worker.email,
-          cities: worker.cities,
-          municipalities: worker.municipalities,
-          hourlyRate: worker.hourlyRate,
-          idCardPhotoFrontUrl: worker.idCardPhotoFrontUrl,
-          idCardPhotoBackUrl: worker.idCardPhotoBackUrl,
-          emailVerified: worker.emailVerified,
-          verifiedByAdmin: worker.verifiedByAdmin,
-          termsAccepted: worker.termsAccepted
-        };
+        return workerPasswordFilter(worker);
 
       };
 
-      async loginWorker(loginWorkerType: LoginWorkerType): Promise<{ accessToken: string; refreshToken: string; worker: Worker }> {
+
+      async loginWorker(loginWorkerType: LoginWorkerType): Promise<{ accessToken: string; refreshToken: string; worker: WorkerNoPasswordType }> {
 
         const { email, password } = loginWorkerType;
         const worker = await this.authWorkerRepository.findWorkerByEmail(email);
@@ -90,10 +74,13 @@ export class AuthWorkerService {
             throw new NotFoundException('Worker does not exist');
         };
     
-        const passwordMatch = await bcrypt.compare(password, worker.password);
+        if(password) {
+          
+            const passwordMatch = await bcrypt.compare(password, worker.password);
 
-        if (!passwordMatch) {
-          throw new UnauthorizedException('Worng password');
+            if (!passwordMatch) {
+              throw new UnauthorizedException('Worng password');
+            };
         };
 
         const accessTokenExpiresAt = new Date();
@@ -110,10 +97,12 @@ export class AuthWorkerService {
             sub: accessToken.id
           };
 
-          const accessTokenToken = this.workerTokenService.createAccessToken(worker);
-          const refreshTokenToken = this.workerTokenService.createRefreshToken(refreshTokenEncode);
-    
-        return { accessToken: accessTokenToken, refreshToken: refreshTokenToken, worker };
+        const accessTokenToken = this.workerTokenService.createAccessToken(worker);
+        const refreshTokenToken = this.workerTokenService.createRefreshToken(refreshTokenEncode);
+
+        const workerNoPassword = workerPasswordFilter(worker); 
+
+        return { accessToken: accessTokenToken, refreshToken: refreshTokenToken, worker: workerNoPassword };
 
       };
 };
