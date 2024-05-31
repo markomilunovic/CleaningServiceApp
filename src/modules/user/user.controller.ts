@@ -4,10 +4,10 @@ import {
   Query, NotFoundException
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { EditUserDto } from './dto/edit-user.dto';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { ConfirmResetPasswordDto } from './dto/confirm-reset-password.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { EditUserDto } from './dtos/edit-user.dto';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { ConfirmResetPasswordDto } from './dtos/confirm-reset-password.dto';
 import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
 import { EmailVerificationService } from './email-verification.service';
 

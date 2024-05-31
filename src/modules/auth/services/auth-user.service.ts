@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from '../user/user.service';
-import { AccessTokenRepository } from './repositories/access-token.repository';
-import { RefreshTokenRepository } from './repositories/refresh-token.repository';
+import { UserService } from 'modules/user/user.service';
+import { AccessTokenRepository } from '../repositories/access-token.repository';
+import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
 import * as bcrypt from 'bcrypt';
-import { User } from '../user/user.model';
+import { User } from 'modules/user/user.model';
 import { AuthResponse } from 'common/interfaces/auth-response.interface';
 
 @Injectable()
-export class AuthService {
+export class AuthUserService {
   private readonly ACCESS_TOKEN_EXP_TIME_IN_DAYS = 1;
   private readonly REFRESH_TOKEN_EXP_TIME_IN_DAYS = 7;
 

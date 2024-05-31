@@ -1,20 +1,12 @@
 import { Module } from '@nestjs/common';
-<<<<<<< HEAD
-import { AuthWorkerController } from './controllers/auth.controller';
-import { AuthWorkerService } from './services/authWorker.service';
-import { AuthWorkerRepository } from './repositories/authWorker.repository';
-
-@Module({
-    controllers: [AuthWorkerController],
-    providers: [AuthWorkerService, AuthWorkerRepository]
-})
-export class AuthModule {};
-=======
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
+import { AuthUserService } from './services/auth-user.service';
+import { AuthWorkerController } from './controllers/authWorker.controller';
+import { AuthWorkerService } from './services/authWorker.service';
+import { AuthWorkerRepository } from './repositories/authWorker.repository';
+import { AuthUserController } from './controllers/auth-user.controller';
 import { UserModule } from '../user/user.module';
 import { AccessToken } from './models/accessToken.model';
 import { RefreshToken } from './models/refreshToken.model';
@@ -39,17 +31,18 @@ import { ResetToken } from './models/resetToken.model';
       }),
       inject: [ConfigService],
     }),
-    SequelizeModule.forFeature([AccessToken, RefreshToken]),
+    SequelizeModule.forFeature([AccessToken, RefreshToken, ResetToken]),
   ],
+  controllers: [AuthWorkerController, AuthUserController],
   providers: [
-    AuthService,
+    AuthWorkerService,
+    AuthWorkerRepository,
+    AuthUserService,
     JwtStrategy,
     GoogleStrategy,
     FacebookStrategy,
     AccessTokenRepository,
     RefreshTokenRepository,
   ],
-  controllers: [AuthController],
 })
 export class AuthModule {}
->>>>>>> develop

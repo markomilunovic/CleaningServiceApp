@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
-import { CreateUserDto } from './dto/create-user.dto';
-import { EditUserDto } from './dto/edit-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { EditUserDto } from './dtos/edit-user.dto';
 import { ResetToken } from 'modules/auth/models/resetToken.model';
 
 @Injectable()

@@ -1,11 +1,11 @@
 import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { AuthUserService } from '../services/auth-user.service';
+import { LoginDto } from '../dtos/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('api/auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class AuthUserController {
+  constructor(private readonly authService: AuthUserService) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {

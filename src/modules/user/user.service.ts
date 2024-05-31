@@ -3,10 +3,10 @@ import {
   Inject
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { User } from './user.model';
 import * as bcrypt from 'bcrypt';
-import { EditUserDto } from './dto/edit-user.dto';
+import { EditUserDto } from './dtos/edit-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
