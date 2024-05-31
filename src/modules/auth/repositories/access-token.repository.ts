@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { AccessToken } from '../models/accessToken.model';
+import { AccessToken } from '../models/access-token.model';
 
 @Injectable()
 export class AccessTokenRepository {

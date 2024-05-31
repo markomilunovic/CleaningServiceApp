@@ -8,8 +8,8 @@ import { User } from './user.model';
 import { UserRepository } from './user.repository';
 import { EmailService } from './email.service';
 import { EmailVerificationService } from './email-verification.service';
-import { VerificationToken } from 'modules/auth/models/verificationToken.model';
-import { ResetToken } from 'modules/auth/models/resetToken.model';
+import { VerificationToken } from 'modules/auth/models/verification-token.model';
+import { ResetToken } from 'modules/auth/models/reset-token.model';
 import { VerificationTokenRepository } from 'modules/auth/repositories/verification-token.repository';
 
 @Module({

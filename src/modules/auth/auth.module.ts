@@ -3,24 +3,24 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthUserService } from './services/auth-user.service';
-import { AuthWorkerController } from './controllers/authWorker.controller';
-import { AuthWorkerService } from './services/authWorker.service';
-import { AuthWorkerRepository } from './repositories/authWorker.repository';
+import { AuthWorkerController } from './controllers/auth-worker.controller';
+import { AuthWorkerService } from './services/auth-worker.service';
+import { AuthWorkerRepository } from './repositories/auth-worker.repository';
 import { AuthUserController } from './controllers/auth-user.controller';
 import { UserModule } from '../user/user.module';
-import { AccessToken } from './models/accessToken.model';
-import { RefreshToken } from './models/refreshToken.model';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { FacebookStrategy } from './strategies/facebook.strategy';
+import { AccessToken } from './models/access-token.model';
+import { RefreshToken } from './models/refresh-token.model';
 import { AccessTokenRepository } from './repositories/access-token.repository';
 import { RefreshTokenRepository } from './repositories/refresh-token.repository';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { ResetToken } from './models/resetToken.model';
-import { GoogleWorkerStrategy } from './workerStrategies/googleWorker.strategy';
-import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strategy';
-import { WorkerTokenService } from './services/workerTokenService';
-import { VerificationToken } from './models/verificationToken.model';
+import { ResetToken } from './models/reset-token.model';
+import { GoogleUserStrategy } from './strategies/user/google-user.strategy';
+import { FacebookWorkerStrategy } from './strategies/worker/facebook-worker.strategy';
+import { WorkerTokenService } from './services/token-service';
+import { VerificationToken } from './models/verification-token.model';
+import { GoogleWorkerStrategy } from './strategies/worker/google-worker.strategy';
+import { FacebookUserStrategy } from './strategies/user/facebook-user.strategy';
 
 @Module({
   imports: [
@@ -43,16 +43,16 @@ import { VerificationToken } from './models/verificationToken.model';
     AuthWorkerRepository,
     AuthUserService,
     JwtStrategy,
-    GoogleStrategy,
-    FacebookStrategy,
+    FacebookUserStrategy,
     AccessTokenRepository,
     RefreshTokenRepository,
     AuthWorkerService, 
-    AuthWorkerRepository, 
+    AuthWorkerRepository,
     GoogleWorkerStrategy,
+    GoogleUserStrategy,
     FacebookWorkerStrategy, 
     ConfigService,
     WorkerTokenService
   ]
 })
-export class AuthModule {}
+export class AuthModule {};

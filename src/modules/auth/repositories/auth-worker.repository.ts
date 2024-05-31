@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterWorkerType } from '../utils/types';
 import { Worker } from 'modules/worker/models/worker.model';
-import { AccessToken } from '../models/accessToken.model';
-import { RefreshToken } from '../models/refreshToken.model';
+import { AccessToken } from '../models/access-token.model';
+import { RefreshToken } from '../models/refresh-token.model';
 
 @Injectable()
 export class AuthWorkerRepository {

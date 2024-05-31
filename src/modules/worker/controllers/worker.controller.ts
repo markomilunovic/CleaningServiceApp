@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Param, Put, Req, UploadedFiles, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WorkerService } from '../services/worker.service';
-import { EditWorkerDto } from '../dtos/editWorker.dto';
+import { EditWorkerDto } from '../dtos/edit-worker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';

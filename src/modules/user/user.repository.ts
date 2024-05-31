@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
-import { ResetToken } from 'modules/auth/models/resetToken.model';
+import { ResetToken } from 'modules/auth/models/reset-token.model';
 
 @Injectable()
 export class UserRepository {

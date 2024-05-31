@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-facebook';
-import { AuthUserService } from '../services/auth-user.service'; 
+import { AuthUserService } from '../../services/auth-user.service'; 
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
+export class FacebookUserStrategy extends PassportStrategy(Strategy, 'facebook-user') {
   constructor(
     private readonly authUserService: AuthUserService,
     configService: ConfigService,
@@ -13,7 +13,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     super({
       clientID: configService.get<string>('FACEBOOK_APP_ID'),
       clientSecret: configService.get<string>('FACEBOOK_APP_SECRET'),
-      callbackURL: configService.get<string>('FACEBOOK_CALLBACK_URL'),
+      callbackURL: configService.get<string>('FACEBOOK__USER_CALLBACK_URL'),
       profileFields: ['emails', 'name'],
     });
   }

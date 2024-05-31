@@ -1,11 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { AuthWorkerRepository } from '../repositories/authWorker.repository';
+import { AuthWorkerRepository } from '../repositories/auth-worker.repository';
 import { LoginWorkerType, RegisterWorkerType, WorkerNoPasswordType } from '../utils/types';
 import * as bcrypt from 'bcrypt';
-import { Worker } from 'modules/worker/models/worker.model';
 import { ConfigService } from '@nestjs/config';
-import { WorkerTokenService } from './workerTokenService';
-import { workerPasswordFilter } from '../utils/workerPasswordFilter.util';
+import { WorkerTokenService } from './token-service';
+import { workerPasswordFilter } from '../utils/worker-password-filter.util';
 
 @Injectable()
 export class AuthWorkerService {
@@ -52,7 +51,7 @@ export class AuthWorkerService {
             cities: [], 
             municipalities: [], 
             hourlyRate: 0, 
-            emailVerified: true,
+            emailVerified: false,
             verifiedByAdmin: false,
             termsAccepted: false
           };

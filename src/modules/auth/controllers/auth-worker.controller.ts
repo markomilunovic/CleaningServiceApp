@@ -1,15 +1,15 @@
 import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, InternalServerErrorException, Post, Req, UnauthorizedException, UploadedFiles, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
-import { AuthWorkerService } from '../services/authWorker.service';
-import { RegisterWorkerDto } from '../dtos/registerWorker.dto';
+import { AuthWorkerService } from '../services/auth-worker.service';
+import { RegisterWorkerDto } from '../dtos/worker/register-worker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
-import { LoginWorkerDto } from '../dtos/loginWorker.dto';
+import { LoginWorkerDto } from '../dtos/worker/login-worker.dto';
 
 let fileCount = 0; // Global counter to track file order
 
-@Controller('auth')
+@Controller('auth-worker')
 export class AuthWorkerController {
 
     constructor(private authWorkerService: AuthWorkerService) {}
@@ -55,11 +55,11 @@ export class AuthWorkerController {
 
 
     @Get('google')
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(AuthGuard('google-worker'))
     async googleAuth(@Req() req) {};
 
     @Get('google/callback')
-    @UseGuards(AuthGuard('google'))
+    @UseGuards(AuthGuard('google-worker'))
     async googleAuthRedirect(@Req() req) {
         if (!req.user) {
             throw new UnauthorizedException('No worker data from Google');
@@ -80,11 +80,11 @@ export class AuthWorkerController {
     };
 
     @Get('facebook')
-    @UseGuards(AuthGuard('facebook'))
+    @UseGuards(AuthGuard('facebook-worker'))
     async facebookAuth(@Req() req) {}
 
     @Get('facebook/callback')
-    @UseGuards(AuthGuard('facebook'))
+    @UseGuards(AuthGuard('facebook-worker'))
     async facebookAuthRedirect(@Req() req) {
       if (!req.user) {
         throw new UnauthorizedException('No worker data from Google');

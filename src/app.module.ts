@@ -7,11 +7,11 @@ import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';
 import { Message } from 'modules/message/message.model';
-import { AccessToken } from 'modules/auth/models/accessToken.model';
+import { AccessToken } from 'modules/auth/models/access-token.model';
 import { AuthModule } from './modules/auth/auth.module';
-import { RefreshToken } from 'modules/auth/models/refreshToken.model';
-import { ResetToken } from 'modules/auth/models/resetToken.model';
-import { VerificationToken } from 'modules/auth/models/verificationToken.model';
+import { RefreshToken } from 'modules/auth/models/refresh-token.model';
+import { ResetToken } from 'modules/auth/models/reset-token.model';
+import { VerificationToken } from 'modules/auth/models/verification-token.model';
 import { WorkerModule } from 'modules/worker/worker.module';
 
 @Module({

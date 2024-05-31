@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { AccessToken } from "./accessToken.model";
+import { AccessToken } from "./access-token.model";
 
 @Table({ tableName: 'refresh_token' })
 export class RefreshToken extends Model<RefreshToken> {

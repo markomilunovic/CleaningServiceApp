@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { VerificationToken } from '../models/verificationToken.model';
+import { VerificationToken } from '../models/verification-token.model';
 import { Op } from 'sequelize';
 
 @Injectable()
