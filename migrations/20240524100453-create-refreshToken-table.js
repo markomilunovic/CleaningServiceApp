@@ -24,19 +24,7 @@ module.exports = {
       is_revoked: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: false,
-      },
-
-      created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
-      },
-
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW,
+        defaultValue: false
       },
 
       expires_at: {

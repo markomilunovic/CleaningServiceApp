@@ -1,5 +1,6 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
 import { User } from "modules/user/user.model";
+import { Worker } from "modules/worker/worker.model";
 
 @Table({ tableName: 'access_token' })
 export class AccessToken extends Model<AccessToken> {
@@ -13,10 +14,18 @@ export class AccessToken extends Model<AccessToken> {
     @ForeignKey(() => User)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false,
+        allowNull: true,
         field: 'user_id'
     })
     userId: number;
+
+    @ForeignKey(() => Worker)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+        field: 'worker_id'
+    })
+    workerId: number;
 
     @Column({
         type: DataType.BOOLEAN,
@@ -25,22 +34,6 @@ export class AccessToken extends Model<AccessToken> {
         field: 'is_revoked'
     })
     isRevoked: boolean;
-    
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'created_at'
-    })
-    createdAt: Date;
-
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'updated_at'
-    })
-    updatedAt: Date;
 
     @Column({
         type: DataType.DATE,

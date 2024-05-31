@@ -1,12 +1,18 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthWorkerRepository } from '../repositories/authWorker.repository';
-import { RegisterWorkerType, RegisteredWorkerType } from '../utils/types';
+import { LoginWorkerType, RegisterWorkerType, RegisteredWorkerType } from '../utils/types';
 import * as bcrypt from 'bcrypt';
 import { Worker } from 'modules/worker/worker.model';
+import { ConfigService } from '@nestjs/config';
+import { WorkerTokenService } from './workerTokenService';
 
 @Injectable()
 export class AuthWorkerService {
-    constructor(private authWorkerRepository: AuthWorkerRepository) {}
+    constructor(
+      private authWorkerRepository: AuthWorkerRepository,
+      private configService: ConfigService,
+      private workerTokenService: WorkerTokenService
+    ) {}
 
     async registerWorker(registerWorkerType: RegisterWorkerType, frontPhotoPath: string, backPhotoPath: string): Promise<RegisteredWorkerType> {
         
@@ -72,6 +78,42 @@ export class AuthWorkerService {
           verifiedByAdmin: worker.verifiedByAdmin,
           termsAccepted: worker.termsAccepted
         };
+
+      };
+
+      async loginWorker(loginWorkerType: LoginWorkerType): Promise<{ accessToken: string; refreshToken: string; worker: Worker }> {
+
+        const { email, password } = loginWorkerType;
+        const worker = await this.authWorkerRepository.findWorkerByEmail(email);
+
+        if (!worker) {
+            throw new NotFoundException('Worker does not exist');
+        };
+    
+        const passwordMatch = await bcrypt.compare(password, worker.password);
+
+        if (!passwordMatch) {
+          throw new UnauthorizedException('Worng password');
+        };
+
+        const accessTokenExpiresAt = new Date();
+        accessTokenExpiresAt.setDate(accessTokenExpiresAt.getDate() + this.configService.get<number>('ACCESS_TOKEN_EXP_TIME_IN_DAYS'));
+
+        const refreshTokenExpiresAt = new Date();
+        refreshTokenExpiresAt.setDate(refreshTokenExpiresAt.getDate() + this.configService.get<number>('REFRESH_TOKEN_EXP_TIME_IN_DAYS'));
+
+        const accessToken = await this.authWorkerRepository.createAccessToken(worker.id, accessTokenExpiresAt);
+        const refreshToken = await this.authWorkerRepository.createRefreshToken(accessToken.id, refreshTokenExpiresAt);
+
+        const refreshTokenEncode = {
+            jti: refreshToken.id,
+            sub: accessToken.id
+          };
+
+          const accessTokenToken = this.workerTokenService.createAccessToken(worker);
+          const refreshTokenToken = this.workerTokenService.createRefreshToken(refreshTokenEncode);
+    
+        return { accessToken: accessTokenToken, refreshToken: refreshTokenToken, worker };
 
       };
 };

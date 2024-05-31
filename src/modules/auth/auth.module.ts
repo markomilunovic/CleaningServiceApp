@@ -19,6 +19,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { ResetToken } from './models/resetToken.model';
 import { GoogleWorkerStrategy } from './workerStrategies/googleWorker.strategy';
 import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strategy';
+import { WorkerTokenService } from './services/workerTokenService';
 
 @Module({
   imports: [
@@ -49,7 +50,8 @@ import { FacebookWorkerStrategy } from './workerStrategies/facebookWorker.strate
     AuthWorkerRepository, 
     GoogleWorkerStrategy,
     FacebookWorkerStrategy, 
-    ConfigService
+    ConfigService,
+    WorkerTokenService
   ]
 })
 export class AuthModule {}
