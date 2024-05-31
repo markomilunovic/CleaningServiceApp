@@ -8,20 +8,13 @@ import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';
 import { Message } from 'modules/message/message.model';
 import { AccessToken } from 'modules/auth/models/accessToken.model';
-<<<<<<< HEAD
-import { AuthModule } from './modules/auth/auth.module';
-import { RefreshToken } from 'modules/auth/models/refreshToken.model';
-import { ResetToken } from 'modules/auth/models/resetToken.model';
-import { VerificationToken } from 'modules/auth/models/verificationToken.model';
-
-=======
 import { RefreshToken } from 'modules/auth/models/refreshToken.model';
 import { ResetToken } from 'modules/auth/models/resetToken.model';
 import { VerificationToken } from 'modules/auth/models/verificationToken.model';
 import { AuthModule } from 'modules/auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from 'app.service';
->>>>>>> develop
+
 
 @Module({
   imports: [
@@ -41,10 +34,7 @@ import { AppService } from 'app.service';
         synchronize: true,
       }),
     }),
-<<<<<<< HEAD
     SequelizeModule.forFeature([User, Worker, Job, Transaction, Message, AccessToken, RefreshToken, ResetToken, VerificationToken]),
-=======
->>>>>>> develop
     AuthModule,
   ],
   providers: [AppService],
