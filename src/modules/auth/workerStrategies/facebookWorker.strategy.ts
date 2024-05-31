@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Profile, Strategy, VerifyCallback } from 'passport-facebook';
+import { Profile, Strategy } from 'passport-facebook';
 import { AuthWorkerService } from '../services/authWorker.service';
+import { VerifyCallback } from 'passport-google-oauth20';
 
 @Injectable()
 export class FacebookWorkerStrategy extends PassportStrategy(Strategy, 'facebook') {

@@ -21,7 +21,7 @@ export class AuthWorkerRepository {
 
     async createAccessToken(workerId: number, accessTokenExpiresAt: Date): Promise<AccessToken> {
 
-        const token = await AccessToken.create({ worker_id: workerId, expires_at: accessTokenExpiresAt });
+        const token = await AccessToken.create({ workerId: workerId, expiresAt: accessTokenExpiresAt });
 
         return token;
         
@@ -29,7 +29,7 @@ export class AuthWorkerRepository {
 
    async createRefreshToken(accessTokenId: string, refreshTokenExpiresAt: Date): Promise<RefreshToken> {
 
-       const token = await RefreshToken.create({ access_token_id: accessTokenId, expires_at: refreshTokenExpiresAt });
+       const token = await RefreshToken.create({ accessTokenId: accessTokenId, expiresAt: refreshTokenExpiresAt });
 
        return token;
        

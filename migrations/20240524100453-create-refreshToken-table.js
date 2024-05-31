@@ -6,8 +6,8 @@ module.exports = {
     await queryInterface.createTable('refresh_token', {
       id: {
         type: Sequelize.UUID,
-        autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
       },
 
       access_token_id: {
