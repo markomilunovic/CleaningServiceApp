@@ -22,14 +22,14 @@ export class ResetToken extends Model<ResetToken> {
   @ForeignKey(() => Worker)
   @Column({
       type: DataType.INTEGER,
-      allowNull: false,
+      allowNull: true,
       field: 'worker_id'
   })
    workerId: number;
 
   @Column({
       type: DataType.BOOLEAN,
-      allowNull: false,
+      allowNull: true,
       defaultValue: false,
       field: 'is_revoked'
   })
@@ -41,4 +41,20 @@ export class ResetToken extends Model<ResetToken> {
       field: 'expires_at',
   })
   expiresAt: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'created_at',
+})
+createdAt: Date;
+
+@Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'updated_at',
+})
+updatedAt: Date;
 };

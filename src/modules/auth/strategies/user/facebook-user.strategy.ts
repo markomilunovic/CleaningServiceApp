@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-facebook';
-import { AuthUserService } from '../../services/auth-user.service'; 
+import { AuthUserService } from '../../services/auth-user.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FacebookUserStrategy extends PassportStrategy(Strategy, 'facebook-user') {
   constructor(
     private readonly authUserService: AuthUserService,
-    configService: ConfigService,
+    private readonly configService: ConfigService,
   ) {
     super({
       clientID: configService.get<string>('FACEBOOK_APP_ID'),
       clientSecret: configService.get<string>('FACEBOOK_APP_SECRET'),
-      callbackURL: configService.get<string>('FACEBOOK__USER_CALLBACK_URL'),
+      callbackURL: configService.get<string>('FACEBOOK_USER_CALLBACK_URL'),
       profileFields: ['emails', 'name'],
     });
   }
@@ -23,7 +23,7 @@ export class FacebookUserStrategy extends PassportStrategy(Strategy, 'facebook-u
 
     if (!emails || emails.length === 0) {
       try {
-        const user = await this.authUserService.registerOrLoginOauth2('', name.givenName, name.familyName);
+        const user = await this.authUserService.registerOrLoginOauth2('', name?.givenName || '', name?.familyName || '');
         return done(null, user);
       } catch (error) {
         console.error('Error validating user:', error);

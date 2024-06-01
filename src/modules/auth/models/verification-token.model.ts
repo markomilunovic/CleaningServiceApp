@@ -14,7 +14,7 @@ export class VerificationToken extends Model<VerificationToken> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'user_id',
   })
   userId: number;
@@ -22,7 +22,7 @@ export class VerificationToken extends Model<VerificationToken> {
   @ForeignKey(() => Worker)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'worker_id'
     })
   workerId: number;
@@ -41,4 +41,20 @@ export class VerificationToken extends Model<VerificationToken> {
     field: 'expires_at',
   })
   expiresAt: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'created_at',
+})
+createdAt: Date;
+
+@Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'updated_at',
+})
+updatedAt: Date;
 };

@@ -29,8 +29,23 @@ export class RefreshToken extends Model<RefreshToken> {
     @Column({
         type: DataType.DATE,
         allowNull: false,
-        defaultValue: DataType.NOW,
         field: 'expires_at'
     })
     expiresAt: Date;
+
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+        defaultValue: DataType.NOW,
+        field: 'created_at',
+    })
+    createdAt: Date;
+    
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+        defaultValue: DataType.NOW,
+        field: 'updated_at',
+    })
+    updatedAt: Date;
 };

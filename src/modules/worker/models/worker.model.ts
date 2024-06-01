@@ -1,4 +1,4 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, CreatedAt, UpdatedAt } from 'sequelize-typescript';
 
 @Table({ tableName: 'worker' })
 export class Worker extends Model<Worker> {
@@ -53,30 +53,35 @@ export class Worker extends Model<Worker> {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
+    field: 'hourly_rate'
   })
   hourlyRate: number;
 
   @Column({
     type: DataType.JSON,
     allowNull: false,
+    field: 'cities'
   })
   cities: object;
 
   @Column({
     type: DataType.JSON,
     allowNull: false,
+    field: 'municipalities'
   })
   municipalities: object;
 
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
+    field: 'email_verified',
   })
   emailVerified: boolean;
 
   @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
+    field: 'terms_accepted',
   })
   termsAccepted: boolean;
 
@@ -87,4 +92,19 @@ export class Worker extends Model<Worker> {
   })
   verifiedByAdmin: boolean;
 
-};
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'created_at',
+  })
+  createdAt: Date;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+    field: 'updated_at',
+  })
+  updatedAt: Date;
+}
