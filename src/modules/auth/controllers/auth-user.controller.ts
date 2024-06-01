@@ -1,19 +1,20 @@
-import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthUserService } from '../services/auth-user.service';
-import { LoginDto } from '../dtos/user/login-user.dto';
+import { LoginUserDto } from '../dtos/user/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth-user')
 export class AuthUserController {
-  constructor(private readonly authService: AuthUserService) {}
+  constructor(private readonly authUserService: AuthUserService) {}
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const user = await this.authUserService.validateUser(loginUserDto.email, loginUserDto.password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    return this.authService.login(user);
+    return this.authUserService.login(user);
   }
 
   @Get('google')
@@ -26,7 +27,7 @@ export class AuthUserController {
     if (!req.user) {
       throw new UnauthorizedException('No user data from Google');
     }
-    return this.authService.login(req.user);
+    return this.authUserService.login(req.user);
   }
 
   @Get('facebook')
@@ -39,6 +40,6 @@ export class AuthUserController {
     if (!req.user) {
       throw new UnauthorizedException('No user data from Facebook');
     }
-    return this.authService.login(req.user);
+    return this.authUserService.login(req.user);
   }
 }

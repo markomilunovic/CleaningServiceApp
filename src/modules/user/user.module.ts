@@ -46,6 +46,6 @@ import { VerificationTokenRepository } from 'modules/auth/repositories/verificat
     },
   ],
   controllers: [UserController],
-  exports: [UserService],
+  exports: [UserService, UserRepository],
 })
 export class UserModule {}

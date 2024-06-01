@@ -1,7 +1,9 @@
 import {
   Controller, Post, Body, BadRequestException, ConflictException,
   InternalServerErrorException, Put, Param, Get, UseGuards,
-  Query, NotFoundException
+  Query, NotFoundException,
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -19,6 +21,7 @@ export class UserController {
   ) {}
 
   @Post('register')
+  @UsePipes(new ValidationPipe({ transform: true }))
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.registerUser(createUserDto);
@@ -33,6 +36,7 @@ export class UserController {
 
   @Put('edit/:id')
   @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ transform: true }))
   async editUser(@Param('id') id: number, @Body() editUserDto: EditUserDto) {
     try {
       const updatedUser = await this.userService.updateUser(id, editUserDto);
@@ -60,6 +64,7 @@ export class UserController {
   }
 
   @Post('forgot-password')
+  @UsePipes(new ValidationPipe({ transform: true }))
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     try {
       await this.userService.generateResetToken(forgotPasswordDto.email);
@@ -70,6 +75,7 @@ export class UserController {
   }
 
   @Post('confirm-reset-password')
+  @UsePipes(new ValidationPipe({ transform: true }))
   async confirmResetPassword(@Query('token') token: string, @Body() confirmResetPasswordDto: ConfirmResetPasswordDto) {
     try {
       await this.userService.resetPassword(
