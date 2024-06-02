@@ -1,17 +1,19 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthWorkerRepository } from '../repositories/auth-worker.repository';
-import { LoginWorkerType, RegisterWorkerType, WorkerNoPasswordType } from '../utils/types';
+import { ForgotPasswordWorkerType, LoginWorkerType, RegisterWorkerType, ResetPasswordWorkerType, WorkerNoPasswordType } from '../utils/types';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { WorkerTokenService } from './token-service';
+import { TokenService } from './token-service';
 import { workerPasswordFilter } from '../utils/worker-password-filter.util';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class AuthWorkerService {
     constructor(
       private authWorkerRepository: AuthWorkerRepository,
       private configService: ConfigService,
-      private workerTokenService: WorkerTokenService
+      private tokenService: TokenService,
+      private emailService: EmailService
     ) {}
 
     async registerWorker(registerWorkerType: RegisterWorkerType, frontPhotoPath: string, backPhotoPath: string): Promise<WorkerNoPasswordType> {
@@ -96,12 +98,78 @@ export class AuthWorkerService {
             sub: accessToken.id
           };
 
-        const accessTokenToken = this.workerTokenService.createAccessToken(worker);
-        const refreshTokenToken = this.workerTokenService.createRefreshToken(refreshTokenEncode);
+        const accessTokenToken = this.tokenService.createAccessToken(worker);
+        const refreshTokenToken = this.tokenService.createRefreshToken(refreshTokenEncode);
 
         const workerNoPassword = workerPasswordFilter(worker); 
 
         return { accessToken: accessTokenToken, refreshToken: refreshTokenToken, worker: workerNoPassword };
+
+      };
+
+      async forgotPassword(forgotPasswordWorkerType: ForgotPasswordWorkerType): Promise<void> {
+
+        const { email } = forgotPasswordWorkerType;
+        const worker = await this.authWorkerRepository.findWorkerByEmail(email);
+
+        if (!worker) {
+            throw new NotFoundException('Worker does not exist');
+        };
+
+        const resetTokenExpiresAt = new Date();
+        resetTokenExpiresAt.setMinutes(resetTokenExpiresAt.getMinutes() + this.configService.get<number>('RESET_TOKEN_EXP_TIME_IN_MINUTES'));
+
+        const resetToken = await this.authWorkerRepository.createResetToken(worker.id, resetTokenExpiresAt);
+
+        const resetTokenEncode = {
+            jti: resetToken.id,
+            sub: email
+        };
+
+        const token = this.tokenService.createResetToken(resetTokenEncode);
+
+        // Send the reset password link to the user's email
+        await this.emailService.sendResetPasswordEmail(email, token, worker.id);
+
+      };
+
+      async resetPassword(resetPasswordWorkerType: ResetPasswordWorkerType): Promise<void>{
+
+        const { token, newPassword } = resetPasswordWorkerType;
+
+        const decodedToken = this.tokenService.verifyToken(token);
+        const email = decodedToken?.resetTokenEncode?.sub;
+        const tokenId = decodedToken?.resetTokenEncode?.jti;
+
+        if (typeof decodedToken === 'string') {
+            throw new Error('Invalid token');
+          };
+
+        const resetToken = await this.authWorkerRepository.findResetTokenById(tokenId);
+        const now = new Date();
+        
+        if (resetToken.expiresAt < now) {
+            throw new BadRequestException('Reset token has expired');
+        };
+
+        const worker = await this.authWorkerRepository.findWorkerByEmail(email);
+
+        if (!worker) {
+            throw new NotFoundException('Worker does not exist');
+        };
+
+        // Check if the new password is different from the current password
+        const passwordMatch = await bcrypt.compare(newPassword, worker.password);
+        if (passwordMatch) {
+            throw new BadRequestException('The new password cannot be same as the old one');
+        };
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await this.authWorkerRepository.updateWorkerPassword(worker.id, hashedPassword);
+
+        // Set the reset token as expired in the database
+        await this.authWorkerRepository.setExpiredResetToken(tokenId);
 
       };
 };

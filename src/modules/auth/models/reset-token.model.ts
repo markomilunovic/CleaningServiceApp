@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { User } from "../../user/user.model";
+import { User } from "modules/user/user.model";
 import { Worker } from "modules/worker/models/worker.model";
 
 @Table({ tableName: 'reset_token' })
@@ -14,7 +14,7 @@ export class ResetToken extends Model<ResetToken> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'user_id',
   })
   userId: number;
