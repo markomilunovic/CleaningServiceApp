@@ -16,9 +16,10 @@ import { FacebookWorkerStrategy } from "./strategies/worker/facebook-worker.stra
 import { AccessTokenRepository } from "./repositories/access-token.repository";
 import { RefreshTokenRepository } from "./repositories/refresh-token.repository";
 import { AuthWorkerRepository } from "./repositories/auth-worker.repository";
-import { WorkerTokenService } from "./services/token-service";
+import { TokenService } from "./services/token-service";
 import { AuthUserController } from "./controllers/auth-user.controller";
 import { AuthWorkerController } from "./controllers/auth-worker.controller";
+import { EmailService } from "./services/email.service";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthWorkerController } from "./controllers/auth-worker.controller";
     }),
     SequelizeModule.forFeature([AccessToken, RefreshToken]),
   ],
+  controllers: [AuthUserController, AuthWorkerController],
   providers: [
     AuthUserService,
     AuthWorkerService,
@@ -46,8 +48,9 @@ import { AuthWorkerController } from "./controllers/auth-worker.controller";
     AccessTokenRepository,
     RefreshTokenRepository,
     AuthWorkerRepository,
-    WorkerTokenService
+    TokenService,
+    EmailService
   ],
-  controllers: [AuthUserController, AuthWorkerController],
+
 })
 export class AuthModule {}

@@ -6,6 +6,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginWorkerDto } from '../dtos/worker/login-worker.dto';
+import { ForgotPasswordWorkerDto } from '../dtos/worker/forgot-password-worker.dto';
+import { ResetPasswordWorkerDto } from '../dtos/worker/reset-password-worker.dto';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -14,7 +16,7 @@ export class AuthWorkerController {
 
     constructor(private authWorkerService: AuthWorkerService) {}
 
-    @Post('worker/register')
+    @Post('register')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     @UseInterceptors(FilesInterceptor('files', 2, {
         storage: diskStorage({
@@ -104,7 +106,7 @@ export class AuthWorkerController {
     };
     };
 
-    @Post('worker/login')
+    @Post('login')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     async loginWorker(@Body() loginWorkerDto: LoginWorkerDto): Promise<{ accessToken: string; refreshToken: string; worker: object }> {
       console.log('loginWorker - loginWorkerDto:', loginWorkerDto);
@@ -117,6 +119,33 @@ export class AuthWorkerController {
         throw new HttpException('Error logging in', HttpStatus.INTERNAL_SERVER_ERROR);
       };
 
+    };
+
+    @Post('forgot-password')
+    @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
+    async forgotPassword(@Body() forgotPasswordWorkerDto: ForgotPasswordWorkerDto): Promise<object> {
+
+        try{
+
+            await this.authWorkerService.forgotPassword(forgotPasswordWorkerDto);
+            return { message: 'Reset password link sent to your email' }
+
+        } catch(error) {
+            throw new HttpException('Failed to process forgot password request', HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    };
+
+    @Post('reset-password')
+    @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
+    async resetPassword(@Body() resetPasswordWorkerDto: ResetPasswordWorkerDto): Promise<object> {
+
+        try{
+            await this.authWorkerService.resetPassword(resetPasswordWorkerDto);
+            return { message: 'Password reset successful' };
+        } catch(error) {
+            console.log(error)
+            throw new HttpException('Failed to reset password', HttpStatus.INTERNAL_SERVER_ERROR);
+        };
     };
 
 

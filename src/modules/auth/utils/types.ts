@@ -34,6 +34,15 @@ export type RefreshTokneEncodeType = {
 };
 
 export type ResetTokneEncodeType = {
-    jti: number;
+    jti: string;
+    sub: string;
+};
+
+export type ForgotPasswordWorkerType = {
     email: string;
+};
+
+export type ResetPasswordWorkerType = {
+    newPassword: string;
+    token: string;
 };

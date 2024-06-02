@@ -6,7 +6,7 @@ import { Worker } from 'modules/worker/models/worker.model';
 
 
 @Injectable()
-export class WorkerTokenService {
+export class TokenService {
     constructor(private configService: ConfigService) {}
 
     createAccessToken(worker: Worker): string {
@@ -17,6 +17,16 @@ export class WorkerTokenService {
     createRefreshToken(refreshTokenEncode: RefreshTokneEncodeType): string {
         const expiresIn = `${this.configService.get('REFRESH_TOKEN_EXP_TIME_IN_DAYS')}d`;
         return jwt.sign({ refreshTokenEncode }, this.configService.get('REFRESH_TOKEN_SECRET'), { expiresIn });
+    };
+
+    createResetToken(resetTokenEncode: ResetTokneEncodeType): string {
+        const expiresIn = `${this.configService.get<string>('RESET_TOKEN_EXP_TIME_IN_MINUTES')}d`;
+        console.log('test')
+        return jwt.sign({ resetTokenEncode }, this.configService.get<string>('RESET_TOKEN_SECRET'), { expiresIn });
+    };
+
+    verifyToken(token: string): any  {
+        return jwt.verify(token, this.configService.get<string>('RESET_TOKEN_SECRET'));
     };
 
 };
