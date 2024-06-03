@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginWorkerDto } from '../dtos/worker/login-worker.dto';
 import { ForgotPasswordWorkerDto } from '../dtos/worker/forgot-password-worker.dto';
 import { ResetPasswordWorkerDto } from '../dtos/worker/reset-password-worker.dto';
-import { VerifyWorkerEmailDto } from '../dtos/worker/verify-worker-email';
+import { VerifyWorkerEmailDto } from '../dtos/worker/verify-worker-email.dto';
 import { ConfirmWorkerEmailDto } from '../dtos/worker/confirm-worker-email.dto';
 
 let fileCount = 0; // Global counter to track file order
