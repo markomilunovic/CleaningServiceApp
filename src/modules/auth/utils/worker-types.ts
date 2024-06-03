@@ -46,3 +46,16 @@ export type ResetPasswordWorkerType = {
     newPassword: string;
     token: string;
 };
+
+export type VerifyWorkerEmailType = {
+    email: string;
+};
+
+export type VerificationTokneEncodeType = {
+    jti: string;
+    sub: string;
+};
+
+export type ConfirmWorkerEmailType = {
+    token: string;
+};

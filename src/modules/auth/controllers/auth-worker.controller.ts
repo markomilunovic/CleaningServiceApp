@@ -8,6 +8,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoginWorkerDto } from '../dtos/worker/login-worker.dto';
 import { ForgotPasswordWorkerDto } from '../dtos/worker/forgot-password-worker.dto';
 import { ResetPasswordWorkerDto } from '../dtos/worker/reset-password-worker.dto';
+import { VerifyWorkerEmailDto } from '../dtos/worker/verify-worker-email';
+import { ConfirmWorkerEmailDto } from '../dtos/worker/confirm-worker-email.dto';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -145,6 +147,33 @@ export class AuthWorkerController {
         } catch(error) {
             console.log(error)
             throw new HttpException('Failed to reset password', HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    };
+
+    @Post('verify-email')
+    @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
+    async verifyEmail(@Body() verifyWorkerEmailDto: VerifyWorkerEmailDto): Promise<object> {
+
+        try{
+
+            await this.authWorkerService.verifyEmail(verifyWorkerEmailDto);
+            return { message: 'Email verification link sent to your email' }
+
+        } catch(error) {
+            throw new HttpException('Failed to process email verification request', HttpStatus.INTERNAL_SERVER_ERROR);
+        };
+    };
+
+    @Post('confirm-email')
+    @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
+    async confirmEmail(@Body() confirmWorkerEmailDto: ConfirmWorkerEmailDto): Promise<object> {
+
+        try{
+            await this.authWorkerService.confirmEmail(confirmWorkerEmailDto);
+            return { message: 'Email verification successful' };
+        } catch(error) {
+            console.log(error)
+            throw new HttpException('Failed to verify email', HttpStatus.INTERNAL_SERVER_ERROR);
         };
     };
 

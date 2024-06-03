@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { RefreshTokneEncodeType, ResetTokneEncodeType } from '../utils/types';
+import { RefreshTokneEncodeType, ResetTokneEncodeType, VerificationTokneEncodeType } from '../utils/worker-types';
 import { Worker } from 'modules/worker/models/worker.model';
 
 
@@ -21,12 +21,20 @@ export class TokenService {
 
     createResetToken(resetTokenEncode: ResetTokneEncodeType): string {
         const expiresIn = `${this.configService.get<string>('RESET_TOKEN_EXP_TIME_IN_MINUTES')}d`;
-        console.log('test')
         return jwt.sign({ resetTokenEncode }, this.configService.get<string>('RESET_TOKEN_SECRET'), { expiresIn });
     };
 
-    verifyToken(token: string): any  {
+    createVerificationToken(verificationTokenEncode: VerificationTokneEncodeType): string {
+        const expiresIn = `${this.configService.get<string>('VERIFICATION_TOKEN_EXP_TIME_IN_MINUTES')}d`;
+        return jwt.sign({ verificationTokenEncode }, this.configService.get<string>('VERIFICATION_TOKEN_SECRET'), { expiresIn });
+    };
+
+    verifyResetToken(token: string): any  {
         return jwt.verify(token, this.configService.get<string>('RESET_TOKEN_SECRET'));
+    };
+
+    verifyVerificationToken(token: string): any  {
+        return jwt.verify(token, this.configService.get<string>('VERIFICATION_TOKEN_SECRET'));
     };
 
 };

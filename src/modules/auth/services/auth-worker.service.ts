@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthWorkerRepository } from '../repositories/auth-worker.repository';
-import { ForgotPasswordWorkerType, LoginWorkerType, RegisterWorkerType, ResetPasswordWorkerType, WorkerNoPasswordType } from '../utils/types';
+import { ConfirmWorkerEmailType, ForgotPasswordWorkerType, LoginWorkerType, RegisterWorkerType, ResetPasswordWorkerType, VerifyWorkerEmailType, WorkerNoPasswordType } from '../utils/worker-types';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { TokenService } from './token-service';
@@ -128,7 +128,7 @@ export class AuthWorkerService {
 
         const token = this.tokenService.createResetToken(resetTokenEncode);
 
-        // Send the reset password link to the user's email
+        // Send the reset password link to the workers's email
         await this.emailService.sendResetPasswordEmail(email, token, worker.id);
 
       };
@@ -137,7 +137,7 @@ export class AuthWorkerService {
 
         const { token, newPassword } = resetPasswordWorkerType;
 
-        const decodedToken = this.tokenService.verifyToken(token);
+        const decodedToken = this.tokenService.verifyResetToken(token);
         const email = decodedToken?.resetTokenEncode?.sub;
         const tokenId = decodedToken?.resetTokenEncode?.jti;
 
@@ -170,6 +170,64 @@ export class AuthWorkerService {
 
         // Set the reset token as expired in the database
         await this.authWorkerRepository.setExpiredResetToken(tokenId);
+
+      };
+
+      async verifyEmail(VerifyWorkerEmailType: VerifyWorkerEmailType): Promise<void> {
+
+        const { email } = VerifyWorkerEmailType;
+        const worker = await this.authWorkerRepository.findWorkerByEmail(email);
+
+        if (!worker) {
+            throw new NotFoundException('Worker does not exist');
+        };
+
+        const verificationTokenExpiresAt = new Date();
+        verificationTokenExpiresAt.setMinutes(verificationTokenExpiresAt.getMinutes() + this.configService.get<number>('VERIFICATION_TOKEN_EXP_TIME_IN_MINUTES'));
+
+        const verificationToken = await this.authWorkerRepository.createVerificationToken(worker.id, verificationTokenExpiresAt);
+
+        const verificationTokenEncode = {
+            jti: verificationToken.id,
+            sub: email
+        };
+
+        const token = this.tokenService.createVerificationToken(verificationTokenEncode);
+
+        // Send the verification email link to the worker's email
+        await this.emailService.sendVerifyEmail(email, token, worker.id);
+
+      };
+
+      async confirmEmail(confirmWorkerEmailType: ConfirmWorkerEmailType): Promise<void>{
+
+        const { token } = confirmWorkerEmailType;
+
+        const decodedToken = this.tokenService.verifyVerificationToken(token);
+        const email = decodedToken?.verificationTokenEncode?.sub;
+        const tokenId = decodedToken?.verificationTokenEncode?.jti;
+
+        if (typeof decodedToken === 'string') {
+            throw new Error('Invalid token');
+          };
+
+        const verificationToken = await this.authWorkerRepository.findVerificationTokenById(tokenId);
+        const now = new Date();
+        
+        if (verificationToken.expiresAt < now) {
+            throw new BadRequestException('Verification token has expired');
+        };
+
+        const worker = await this.authWorkerRepository.findWorkerByEmail(email);
+
+        if (!worker) {
+            throw new NotFoundException('Worker does not exist');
+        };
+
+        await this.authWorkerRepository.updateWorkerEmailStatus(worker.email);
+
+        // Set the verification token as expired in the database
+        await this.authWorkerRepository.setExpiredVerificationToken(tokenId);
 
       };
 };
