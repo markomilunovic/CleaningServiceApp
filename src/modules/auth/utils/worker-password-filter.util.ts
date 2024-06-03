@@ -1,5 +1,5 @@
 import { Worker } from 'modules/worker/models/worker.model';
-import { WorkerNoPasswordType } from './types';
+import { WorkerNoPasswordType } from './worker-types';
 
 export function workerPasswordFilter(worker: Worker): WorkerNoPasswordType {
     return {
