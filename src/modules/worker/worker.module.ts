@@ -5,6 +5,7 @@ import { WorkerRepository } from './repositories/worker.repository';
 
 @Module({
     controllers: [WorkerController],
-    providers: [WorkerService, WorkerRepository]
+    providers: [WorkerService, WorkerRepository],
+    exports: [WorkerService, WorkerRepository]
 })
 export class WorkerModule {};

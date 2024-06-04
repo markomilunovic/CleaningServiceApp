@@ -50,4 +50,17 @@ export class JobRepository {
       throw new InternalServerErrorException('Database error occurred while retrieving jobs');
     }
   }
+
+  async updateStatus(jobId: number, status: string): Promise<void> {
+    try {
+      const job = await this.jobModel.findByPk(jobId);
+      if (!job) {
+        throw new BadRequestException('Job not found');
+      }
+      job.status = status;
+      await job.save();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update job status');
+    }
+  }
 }
