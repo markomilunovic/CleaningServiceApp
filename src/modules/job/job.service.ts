@@ -17,7 +17,6 @@ export class JobService {
   async createJob(createJobDTO: CreateJobDTO, userId: number): Promise<Job> {
     try {
       createJobDTO.userId = userId;
-      createJobDTO.workerId = null;
       return await this.jobRepository.create(createJobDTO);
     } catch (error) {
       console.error('Failed to create job:', error);
@@ -53,7 +52,7 @@ export class JobService {
     }
   }
 
-  async confirmJob(confirmJobDTO: ConfirmJobDTO, userId): Promise<void> {
+  async confirmJob(confirmJobDTO: ConfirmJobDTO, userId: number): Promise<void> {
     const { jobId } = confirmJobDTO;
     const job = await this.jobRepository.findById(jobId);
 

@@ -30,7 +30,7 @@ export class JobController {
     }
   }
 
-  @Get()
+  @Get('list')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getJobs(@Query() query: JobQueryParamsDto): Promise<{ rows: Job[]; count: number }> {
     try {
