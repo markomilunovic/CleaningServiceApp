@@ -20,6 +20,8 @@ import { TokenService } from "./services/token-service";
 import { AuthUserController } from "./controllers/auth-user.controller";
 import { AuthWorkerController } from "./controllers/auth-worker.controller";
 import { EmailService } from "./services/email.service";
+import { MulterModule } from "@nestjs/platform-express";
+import { MulterConfigService } from "config/multer.provider";
 
 @Module({
   imports: [
@@ -35,6 +37,10 @@ import { EmailService } from "./services/email.service";
       inject: [ConfigService],
     }),
     SequelizeModule.forFeature([AccessToken, RefreshToken]),
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      useClass: MulterConfigService,
+    }),
   ],
   controllers: [AuthUserController, AuthWorkerController],
   providers: [

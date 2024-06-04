@@ -2,8 +2,6 @@ import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, 
 import { AuthWorkerService } from '../services/auth-worker.service';
 import { RegisterWorkerDto } from '../dtos/worker/register-worker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginWorkerDto } from '../dtos/worker/login-worker.dto';
 import { ForgotPasswordWorkerDto } from '../dtos/worker/forgot-password-worker.dto';
@@ -16,25 +14,12 @@ let fileCount = 0; // Global counter to track file order
 @Controller('auth-worker')
 export class AuthWorkerController {
 
-    constructor(private authWorkerService: AuthWorkerService) {}
+    constructor(
+        private authWorkerService: AuthWorkerService) {}
 
     @Post('register')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-    @UseInterceptors(FilesInterceptor('files', 2, {
-        storage: diskStorage({
-            destination: 'idCard_images',
-            filename: (req, file, cb) => {
-                const ext = extname(file.originalname);
-                const email = req.body.email; 
-
-                // Determine the label based on the file count
-                const label = fileCount === 0 ? 'front' : 'back';
-                fileCount++;
-
-                cb(null, `${email}-${label}${ext}`);
-            }
-        })
-    }))
+    @UseInterceptors(FilesInterceptor('files', 2))
     async registerWorker(@UploadedFiles() files: Express.Multer.File[], @Body() registerWorkerDto: RegisterWorkerDto): Promise<object> {
       console.log('registerWorker - registerWorkerDto:', registerWorkerDto);
         try{
