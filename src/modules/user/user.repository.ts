@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
 import { ResetToken } from 'modules/auth/models/reset-token.model';
+import { Worker } from 'modules/worker/models/worker.model';
 
 @Injectable()
 export class UserRepository {
@@ -49,4 +50,9 @@ export class UserRepository {
   async updateUserPassword(userId: number, hashedPassword: string): Promise<void> {
     await this.userModel.update({ password: hashedPassword }, { where: { id: userId } });
   }
+
+  async getAllWorkers(): Promise<Worker[]> {
+    const workers = await Worker.findAll();
+    return workers;
+  };
 }

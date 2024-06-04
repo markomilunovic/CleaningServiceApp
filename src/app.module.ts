@@ -14,6 +14,7 @@ import { VerificationToken } from 'modules/auth/models/verification-token.model'
 import { AuthModule } from 'modules/auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from 'app.service';
+import { WorkerModule } from 'modules/worker/worker.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AppService } from 'app.service';
       }),
     }),
     AuthModule,
+    WorkerModule,
   ],
   providers: [AppService],
   controllers: [AppController],

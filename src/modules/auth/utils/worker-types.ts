@@ -59,3 +59,23 @@ export type VerificationTokneEncodeType = {
 export type ConfirmWorkerEmailType = {
     token: string;
 };
+
+export type JwtWorkerPayloadType = {
+    worker: {
+      id: number;
+      password: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      idCardPhotoFrontUrl: string;
+      idCardPhotoBackUrl: string;
+      hourlyRate: number;
+      cities: object;
+      municipalities: object;
+      emailVerified: boolean;
+      termsAccepted: boolean;
+      verifiedByAdmin: boolean;
+    };
+    iat: number;
+    exp: number;
+  };
