@@ -132,4 +132,19 @@ export class UserController {
     };
   };
 
+  @Get('job-approve/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  async approveJob(@Param('id') id: number): Promise<object> {
+
+    try {
+      await this.userService.approveJob(id);
+
+      return { message: 'Job approved successfully' };
+
+    } catch (error){
+      throw new InternalServerErrorException('Error approving job');
+    };
+  };
+
 };

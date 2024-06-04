@@ -127,8 +127,12 @@ export class UserService {
     return workers;
   };
 
-  async approveWorker(id: number) {
+  async approveWorker(id: number): Promise<void> {
     await this.userRepository.approveWorker(id);
   };
 
-}
+  async approveJob(id: number): Promise<void> {
+    await this.userRepository.approveJob(id);
+  };
+
+};
