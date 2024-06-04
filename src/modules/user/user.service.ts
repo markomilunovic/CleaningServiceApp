@@ -127,4 +127,8 @@ export class UserService {
     return workers;
   };
 
+  async approveWorker(id: number) {
+    await this.userRepository.approveWorker(id);
+  };
+
 }

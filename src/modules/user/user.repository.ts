@@ -55,4 +55,8 @@ export class UserRepository {
     const workers = await Worker.findAll();
     return workers;
   };
-}
+
+  async approveWorker(id: number) {
+    await Worker.update({ verifiedByAdmin: true }, { where: { id: id }});
+  };
+};

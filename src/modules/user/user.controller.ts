@@ -115,4 +115,21 @@ export class UserController {
     };
   };
 
-}
+
+  @Get('worker-approve/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  async approveWorker(@Param('id') id: number): Promise<object> {
+
+    try {
+
+      await this.userService.approveWorker(id);
+
+      return { message: 'Worker approved successfully'};
+
+    } catch (error) {
+      throw new InternalServerErrorException('Error approving worker');
+    };
+  };
+
+};
