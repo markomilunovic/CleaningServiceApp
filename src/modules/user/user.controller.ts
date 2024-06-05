@@ -15,6 +15,8 @@ import { EmailVerificationService } from './email-verification.service';
 import { Roles } from 'common/decorators/roles.decorator';
 import { Worker } from 'modules/worker/models/worker.model';
 import { RolesGuard } from 'common/guards/roles.guard';
+import { ResponseDto } from 'common/dto/response.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('api/user')
 export class UserController {
@@ -28,7 +30,7 @@ export class UserController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.registerUser(createUserDto);
-      return { message: 'User registered. Verification email sent.' };
+      return new ResponseDto(new UserResponseDto(user), 'User registered. Verification email sent.');
     } catch (error) {
       if (error instanceof ConflictException) {
         throw new BadRequestException(error.message);
@@ -37,7 +39,7 @@ export class UserController {
     }
   }
 
-  @Put('edit/:id')
+  @Put(':id/edit')
   @UseGuards(JwtUserGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   async editUser(@Param('id') id: number, @Body() editUserDto: EditUserDto) {
@@ -46,7 +48,7 @@ export class UserController {
       if (!updatedUser) {
         throw new NotFoundException('User not found');
       }
-      return updatedUser;
+      return new ResponseDto(new UserResponseDto(updatedUser), 'User updated successfully');
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -60,7 +62,7 @@ export class UserController {
       if (!user) {
         throw new NotFoundException('User not found');
       }
-      return user;
+      return new ResponseDto(new UserResponseDto(user), 'User retrieved successfully');
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -71,7 +73,7 @@ export class UserController {
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     try {
       await this.userService.generateResetToken(forgotPasswordDto.email);
-      return { message: 'Password reset token generated.' };
+      return new ResponseDto(null, 'Password reset token generated.');
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -81,11 +83,8 @@ export class UserController {
   @UsePipes(new ValidationPipe({ transform: true }))
   async confirmResetPassword(@Query('token') token: string, @Body() confirmResetPasswordDto: ConfirmResetPasswordDto) {
     try {
-      await this.userService.resetPassword(
-        token,
-        confirmResetPasswordDto.newPassword,
-      );
-      return { message: 'Password successfully reset.' };
+      await this.userService.resetPassword(token, confirmResetPasswordDto.newPassword);
+      return new ResponseDto(null, 'Password successfully reset.');
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -95,14 +94,14 @@ export class UserController {
   async verifyEmail(@Query('token') token: string) {
     try {
       await this.emailVerificationService.verifyToken(token);
-      return { message: 'Email successfully verified.' };
+      return new ResponseDto(null, 'Email successfully verified.');
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async getAllWorkers(): Promise<Worker[]> {
     try {
@@ -115,4 +114,5 @@ export class UserController {
     };
   };
 
-}
+};
+
