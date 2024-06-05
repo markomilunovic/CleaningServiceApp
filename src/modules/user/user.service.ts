@@ -11,6 +11,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
 import { EmailVerificationService } from './email-verification.service';
+import { Worker } from 'modules/worker/models/worker.model';
+import { Job } from 'modules/job/job.model';
 
 @Injectable()
 export class UserService {
@@ -62,7 +64,7 @@ export class UserService {
       }
       return user;
     } catch (error) {
-      throw new InternalServerErrorException('Error finding user.');
+      throw new InternalServerErrorException('Error finding user');
     }
   }
 
@@ -122,7 +124,7 @@ export class UserService {
     }
   }
 
-  async getAllWorkers() {
+  async getAllWorkers(): Promise<Worker[]> {
     const workers = await this.userRepository.getAllWorkers();
     return workers;
   };
@@ -131,6 +133,11 @@ export class UserService {
     await this.userRepository.approveWorker(id);
   };
 
+  async getAllJobs(): Promise<Job[]> {
+    const jobs = await this.userRepository.getAllJobs();
+    return jobs;
+  };
+  
   async approveJob(id: number): Promise<void> {
     await this.userRepository.approveJob(id);
   };

@@ -15,6 +15,7 @@ import { EmailVerificationService } from './email-verification.service';
 import { Roles } from 'common/decorators/roles.decorator';
 import { Worker } from 'modules/worker/models/worker.model';
 import { RolesGuard } from 'common/guards/roles.guard';
+import { Job } from 'modules/job/job.model';
 
 @Controller('api/user')
 export class UserController {
@@ -52,7 +53,7 @@ export class UserController {
     }
   }
 
-  @Get(':id')
+  @Get('profile/:id')
   @UseGuards(JwtAuthGuard)
   async getUser(@Param('id') id: number) {
     try {
@@ -101,7 +102,7 @@ export class UserController {
     }
   }
 
-  @Get()
+  @Get('workers')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
   async getAllWorkers(): Promise<Worker[]> {
@@ -132,6 +133,20 @@ export class UserController {
     };
   };
 
+  @Get('jobs')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  async getAllJobs(): Promise<Job[]> {
+    try {
+      
+      const jobs = await this.userService.getAllJobs();
+      return jobs;
+
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving jobs');
+    };
+  };
+
   @Get('job-approve/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
@@ -146,5 +161,6 @@ export class UserController {
       throw new InternalServerErrorException('Error approving job');
     };
   };
+
 
 };

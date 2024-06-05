@@ -61,6 +61,11 @@ export class UserRepository {
     await Worker.update({ verifiedByAdmin: true }, { where: { id: id }});
   };
 
+  async getAllJobs(): Promise<Job[]> {
+    const jobs = await Job.findAll();
+    return jobs;
+  };
+
   async approveJob(id: number): Promise<void> {
     await Job.update({ approvedByAdmin: true }, { where: { id: id }});
   };
