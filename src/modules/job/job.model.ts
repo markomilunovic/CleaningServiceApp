@@ -99,6 +99,13 @@ export class Job extends Model<Job> {
   municipality: string;
 
   @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  })
+  approvedByAdmin: boolean;
+
+  @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,

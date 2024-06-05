@@ -19,6 +19,8 @@ import { RolesGuard } from 'common/guards/roles.guard';
 import { ResponseDto } from 'common/dto/response.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { ApproveWorkerDto } from './dtos/approve-worker.dto';
+import { ApproveJobDto } from './dtos/approve.job.dto';
+
 
 @Controller('api/user')
 export class UserController {
@@ -130,6 +132,21 @@ export class UserController {
 
     } catch (error) {
       throw new InternalServerErrorException('Error approving worker');
+    };
+  };
+
+  @Patch('approve-job')
+  @UseGuards(JwtUserGuard, RolesGuard)
+  @Roles('admin')
+  async approveJob(@Body() approveJobDto: ApproveJobDto): Promise<object> {
+
+    try {
+      await this.userService.approveJob(approveJobDto);
+
+      return { message: 'Job approved successfully' };
+
+    } catch (error){
+      throw new InternalServerErrorException('Error approving job');
     };
   };
 
