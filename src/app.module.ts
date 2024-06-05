@@ -15,6 +15,7 @@ import { AuthModule } from 'modules/auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from 'app.service';
 import { WorkerModule } from 'modules/worker/worker.module';
+import { JobModule } from 'modules/job/job.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { WorkerModule } from 'modules/worker/worker.module';
     }),
     AuthModule,
     WorkerModule,
+    JobModule,
   ],
   providers: [AppService],
   controllers: [AppController],
