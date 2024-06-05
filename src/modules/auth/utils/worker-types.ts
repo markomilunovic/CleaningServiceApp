@@ -28,6 +28,11 @@ export type LoginWorkerType = {
     password: string;
 };
 
+export type AccessTokneEncodeType = {
+    jti: string;
+    sub: number;
+};
+
 export type RefreshTokneEncodeType = {
     jti: string;
     sub: string;
@@ -60,22 +65,4 @@ export type ConfirmWorkerEmailType = {
     token: string;
 };
 
-export type JwtWorkerPayloadType = {
-    worker: {
-      id: number;
-      password: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      idCardPhotoFrontUrl: string;
-      idCardPhotoBackUrl: string;
-      hourlyRate: number;
-      cities: object;
-      municipalities: object;
-      emailVerified: boolean;
-      termsAccepted: boolean;
-      verifiedByAdmin: boolean;
-    };
-    iat: number;
-    exp: number;
-  };
+
