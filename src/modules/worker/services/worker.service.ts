@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { WorkerRepository } from '../repositories/worker.repository';
 import { EditWorkerType } from '../utils/types';
 import { Worker } from '../models/worker.model';
@@ -29,4 +29,16 @@ export class WorkerService {
 
     return worker;
   };
+
+  async findWorkerById(id: number): Promise<Worker> {
+    try {
+      const worker = await this.workerRepository.findWorkerById(id);
+      if (!worker) {
+        throw new NotFoundException('Worker not found.');
+      }
+      return worker;
+    } catch (error) {
+      throw new InternalServerErrorException('Error finding worker.');
+    }
+  }
 };
