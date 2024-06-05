@@ -14,6 +14,7 @@ import { VerificationToken } from 'modules/auth/models/verification-token.model'
 import { AuthModule } from 'modules/auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from 'app.service';
+import { WorkerModule } from 'modules/worker/worker.module';
 import { JobModule } from 'modules/job/job.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { JobModule } from 'modules/job/job.module';
       }),
     }),
     AuthModule,
+    WorkerModule,
     JobModule,
   ],
   providers: [AppService],

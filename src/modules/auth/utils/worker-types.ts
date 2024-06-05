@@ -28,6 +28,11 @@ export type LoginWorkerType = {
     password: string;
 };
 
+export type AccessTokneEncodeType = {
+    jti: string;
+    sub: number;
+};
+
 export type RefreshTokneEncodeType = {
     jti: string;
     sub: string;
@@ -59,3 +64,5 @@ export type VerificationTokneEncodeType = {
 export type ConfirmWorkerEmailType = {
     token: string;
 };
+
+

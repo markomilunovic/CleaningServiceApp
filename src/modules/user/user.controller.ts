@@ -12,6 +12,9 @@ import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { ConfirmResetPasswordDto } from './dtos/confirm-reset-password.dto';
 import { JwtUserGuard } from 'common/guards/jwt-user.guard';
 import { EmailVerificationService } from './email-verification.service';
+import { Roles } from 'common/decorators/roles.decorator';
+import { Worker } from 'modules/worker/models/worker.model';
+import { RolesGuard } from 'common/guards/roles.guard';
 import { ResponseDto } from 'common/dto/response.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 
@@ -96,4 +99,20 @@ export class UserController {
       throw new InternalServerErrorException(error.message);
     }
   }
-}
+
+  @Get()
+  @UseGuards(JwtUserGuard, RolesGuard)
+  @Roles('admin')
+  async getAllWorkers(): Promise<Worker[]> {
+    try {
+      
+      const workers = await this.userService.getAllWorkers();
+      return workers;
+
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving workers');
+    };
+  };
+
+};
+

@@ -121,4 +121,10 @@ export class UserService {
       throw new InternalServerErrorException('Error resetting password.');
     }
   }
+
+  async getAllWorkers() {
+    const workers = await this.userRepository.getAllWorkers();
+    return workers;
+  };
+
 }
