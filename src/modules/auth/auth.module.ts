@@ -8,7 +8,7 @@ import { AccessToken } from "./models/access-token.model";
 import { RefreshToken } from "./models/refresh-token.model";
 import { AuthUserService } from "./services/auth-user.service";
 import { AuthWorkerService } from "./services/auth-worker.service";
-import { JwtStrategy } from "./strategies/jwt.strategy";
+import { JwtUserStrategy } from "./strategies/user/jwt-user.strategy";
 import { GoogleUserStrategy } from "./strategies/user/google-user.strategy";
 import { GoogleWorkerStrategy } from "./strategies/worker/google-worker.strategy";
 import { FacebookUserStrategy } from "./strategies/user/facebook-user.strategy";
@@ -46,7 +46,7 @@ import { MulterConfigService } from "config/multer.provider";
   providers: [
     AuthUserService,
     AuthWorkerService,
-    JwtStrategy,
+    JwtUserStrategy,
     GoogleUserStrategy,
     GoogleWorkerStrategy,
     FacebookUserStrategy,

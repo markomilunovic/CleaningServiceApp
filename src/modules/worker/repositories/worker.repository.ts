@@ -12,4 +12,8 @@ export class WorkerRepository {
 
     return worker;
   };
+
+  async findWorkerById(id: number): Promise<Worker> {
+    return Worker.findByPk(id);
+  }
 };

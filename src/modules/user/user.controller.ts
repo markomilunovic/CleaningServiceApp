@@ -10,7 +10,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { ConfirmResetPasswordDto } from './dtos/confirm-reset-password.dto';
-import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
+import { JwtUserGuard } from 'common/guards/jwt-user.guard';
 import { EmailVerificationService } from './email-verification.service';
 import { Roles } from 'common/decorators/roles.decorator';
 import { Worker } from 'modules/worker/models/worker.model';
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Put('edit/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtUserGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   async editUser(@Param('id') id: number, @Body() editUserDto: EditUserDto) {
     try {
@@ -53,7 +53,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtUserGuard)
   async getUser(@Param('id') id: number) {
     try {
       const user = await this.userService.findUserById(id);
