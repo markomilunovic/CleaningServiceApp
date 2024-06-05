@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { RefreshTokneEncodeType, ResetTokneEncodeType, VerificationTokneEncodeType } from '../utils/worker-types';
+import { AccessTokneEncodeType, RefreshTokneEncodeType, ResetTokneEncodeType, VerificationTokneEncodeType } from '../utils/worker-types';
 import { Worker } from 'modules/worker/models/worker.model';
 
 
@@ -9,9 +9,9 @@ import { Worker } from 'modules/worker/models/worker.model';
 export class TokenService {
     constructor(private configService: ConfigService) {}
 
-    createAccessToken(worker: Worker): string {
+    createAccessToken(accessTokenEncode: AccessTokneEncodeType): string {
         const expiresIn = `${this.configService.get('ACCESS_TOKEN_EXP_TIME_IN_DAYS')}d`;
-        return jwt.sign({ worker }, this.configService.get('ACCESS_TOKEN_SECRET'), { expiresIn });
+        return jwt.sign({ accessTokenEncode }, this.configService.get('ACCESS_TOKEN_SECRET'), { expiresIn });
     };
 
     createRefreshToken(refreshTokenEncode: RefreshTokneEncodeType): string {

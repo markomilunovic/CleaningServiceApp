@@ -93,12 +93,17 @@ export class AuthWorkerService {
         const accessToken = await this.authWorkerRepository.createAccessToken(worker.id, accessTokenExpiresAt);
         const refreshToken = await this.authWorkerRepository.createRefreshToken(accessToken.id, refreshTokenExpiresAt);
 
+        const accessTokenEncode = {
+          jti: accessToken.id,
+          sub: worker.id
+        };
+
         const refreshTokenEncode = {
             jti: refreshToken.id,
             sub: accessToken.id
           };
 
-        const accessTokenToken = this.tokenService.createAccessToken(worker);
+        const accessTokenToken = this.tokenService.createAccessToken(accessTokenEncode);
         const refreshTokenToken = this.tokenService.createRefreshToken(refreshTokenEncode);
 
         const workerNoPassword = workerPasswordFilter(worker); 

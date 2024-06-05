@@ -13,6 +13,7 @@ import { EmailService } from './email.service';
 import { EmailVerificationService } from './email-verification.service';
 import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
+import { ApproveJobType, ApproveWorkerType } from './utils/types';
 
 @Injectable()
 export class UserService {
@@ -129,8 +130,8 @@ export class UserService {
     return workers;
   };
 
-  async approveWorker(id: number): Promise<void> {
-    await this.userRepository.approveWorker(id);
+  async approveWorker(approveWorkerType: ApproveWorkerType) {
+    await this.userRepository.approveWorker(approveWorkerType);
   };
 
   async getAllJobs(): Promise<Job[]> {
@@ -138,8 +139,8 @@ export class UserService {
     return jobs;
   };
   
-  async approveJob(id: number): Promise<void> {
-    await this.userRepository.approveJob(id);
+  async approveJob(approveJobType: ApproveJobType): Promise<void> {
+    await this.userRepository.approveJob(approveJobType);
   };
 
 };
