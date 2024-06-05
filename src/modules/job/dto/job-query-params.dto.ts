@@ -1,7 +1,7 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class JobListDto {
+export class JobQueryParamsDto {
   @IsInt()
   @IsOptional()
   @Type(() => Number)
