@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, UsePipes, ValidationPipe, Query, Us
 import { JobService } from './job.service';
 import { CreateJobDTO } from './dto/create-job.dto';
 import { JwtUserGuard } from 'common/guards/jwt-user.guard';
-import { Job } from './job.model';
 import { JobQueryParamsDto } from './dto/job-query-params.dto';
 import { JobApplicationDTO } from './dto/job-application.dto';
+import { ResponseDto } from 'common/dto/response.dto';
+import { JobResponseDto } from './dto/job-response.dto';
 
 @Controller('job')
 export class JobController {
@@ -13,10 +14,11 @@ export class JobController {
   @Post('create')
   @UseGuards(JwtUserGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async createJob(@Body() createJobDTO: CreateJobDTO, @Req() req): Promise<Job> {
+  async createJob(@Body() createJobDTO: CreateJobDTO, @Req() req): Promise<ResponseDto<JobResponseDto>> {
     try {
       const userId = req.user.id;
-      return await this.jobService.createJob(createJobDTO, userId);
+      const job = await this.jobService.createJob(createJobDTO, userId);
+      return new ResponseDto(new JobResponseDto(job), 'Job created successfully');
     } catch (error) {
       console.error('Error creating job:', error);
       throw new HttpException(
@@ -31,9 +33,10 @@ export class JobController {
 
   @Get('list')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async getJobs(@Query() query: JobQueryParamsDto): Promise<{ rows: Job[]; count: number }> {
+  async getJobs(@Query() query: JobQueryParamsDto): Promise<ResponseDto<{ rows: JobResponseDto[]; count: number }>> {
     try {
-      return await this.jobService.findAll(query);
+      const { rows, count } = await this.jobService.findAll(query);
+      return new ResponseDto({ rows: rows.map(job => new JobResponseDto(job)), count }, 'Jobs retrieved successfully');
     } catch (error) {
       console.error('Error retrieving jobs:', error);
       throw new HttpException(
@@ -48,10 +51,10 @@ export class JobController {
 
   @Patch(':id/apply')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async applyForJob(@Param('id') jobId: number, @Body() jobApplicationDTO: JobApplicationDTO): Promise<{ message: string }> {
+  async applyForJob(@Param('id') jobId: number, @Body() jobApplicationDTO: JobApplicationDTO): Promise<ResponseDto<{ message: string }>> {
     try {
       await this.jobService.applyForJob(jobId, jobApplicationDTO);
-      return { message: 'Application successful' };
+      return new ResponseDto({ message: 'Application successful' }, 'Job application submitted successfully');
     } catch (error) {
       console.error('Error applying for job:', error);
       throw new HttpException(
@@ -66,11 +69,11 @@ export class JobController {
 
   @Patch(':id/confirm')
   @UseGuards(JwtUserGuard)
-  async confirmJob(@Param('id') jobId: number, @Req() req): Promise<{ message: string }> {
+  async confirmJob(@Param('id') jobId: number, @Req() req): Promise<ResponseDto<{ message: string }>> {
     try {
       const userId = req.user.id;
       await this.jobService.confirmJob(jobId, userId);
-      return { message: 'Job successfully confirmed' };
+      return new ResponseDto({ message: 'Job successfully confirmed' }, 'Job confirmation successful');
     } catch (error) {
       console.error('Error confirming job:', error);
       throw new HttpException(
