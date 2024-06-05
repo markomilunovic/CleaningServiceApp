@@ -71,8 +71,7 @@ export class AuthUserService {
     };
   }
 
-  async login(user: User): Promise<{ authResponse: AuthResponse }> {
-    const authResponse = await this.generateTokens(user);
-    return { authResponse };
+  async login(user: User): Promise<AuthResponse> {
+    return await this.generateTokens(user);
   }
 }
