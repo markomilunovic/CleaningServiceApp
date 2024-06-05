@@ -14,7 +14,7 @@ export class Job extends Model<Job> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'user_id',
   })
   userId: number;

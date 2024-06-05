@@ -10,7 +10,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { ConfirmResetPasswordDto } from './dtos/confirm-reset-password.dto';
-import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
+import { JwtUserGuard } from 'common/guards/jwt-user.guard';
 import { EmailVerificationService } from './email-verification.service';
 import { Roles } from 'common/decorators/roles.decorator';
 import { Worker } from 'modules/worker/models/worker.model';
@@ -39,7 +39,7 @@ export class UserController {
   }
 
   @Put('edit/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtUserGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   async editUser(@Param('id') id: number, @Body() editUserDto: EditUserDto) {
     try {
@@ -54,7 +54,7 @@ export class UserController {
   }
 
   @Get('profile/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtUserGuard)
   async getUser(@Param('id') id: number) {
     try {
       const user = await this.userService.findUserById(id);
@@ -103,7 +103,7 @@ export class UserController {
   }
 
   @Get('workers')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async getAllWorkers(): Promise<Worker[]> {
     try {
@@ -118,7 +118,7 @@ export class UserController {
 
 
   @Get('worker-approve/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async approveWorker(@Param('id') id: number): Promise<object> {
 
@@ -134,7 +134,7 @@ export class UserController {
   };
 
   @Get('jobs')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async getAllJobs(): Promise<Job[]> {
     try {
@@ -148,7 +148,7 @@ export class UserController {
   };
 
   @Get('job-approve/:id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async approveJob(@Param('id') id: number): Promise<object> {
 
