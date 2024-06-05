@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
 import { EmailVerificationService } from './email-verification.service';
+import { ApproveWorkerType } from './utils/types';
 
 @Injectable()
 export class UserService {
@@ -125,6 +126,10 @@ export class UserService {
   async getAllWorkers() {
     const workers = await this.userRepository.getAllWorkers();
     return workers;
+  };
+
+  async approveWorker(approveWorkerType: ApproveWorkerType) {
+    await this.userRepository.approveWorker(approveWorkerType);
   };
 
 }

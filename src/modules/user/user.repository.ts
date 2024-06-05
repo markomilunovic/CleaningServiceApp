@@ -5,6 +5,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
 import { ResetToken } from 'modules/auth/models/reset-token.model';
 import { Worker } from 'modules/worker/models/worker.model';
+import { ApproveWorkerType } from './utils/types';
 
 @Injectable()
 export class UserRepository {
@@ -55,4 +56,9 @@ export class UserRepository {
     const workers = await Worker.findAll();
     return workers;
   };
-}
+
+  async approveWorker(approveWorkerType: ApproveWorkerType) {
+    const { id } = approveWorkerType;
+    await Worker.update({ verifiedByAdmin: true }, { where: { id: id }});
+  };
+};

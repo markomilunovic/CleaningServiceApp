@@ -3,7 +3,8 @@ import {
   InternalServerErrorException, Put, Param, Get, UseGuards,
   Query, NotFoundException,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
+  Patch
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -17,6 +18,7 @@ import { Worker } from 'modules/worker/models/worker.model';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { ResponseDto } from 'common/dto/response.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
+import { ApproveWorkerDto } from './dtos/approve-worker.dto';
 
 @Controller('api/user')
 export class UserController {
@@ -114,5 +116,21 @@ export class UserController {
     };
   };
 
-};
 
+  @Patch('approve-worker')
+  @UseGuards(JwtUserGuard, RolesGuard)
+  @Roles('admin')
+  async approveWorker(@Body() approveWorkerDto: ApproveWorkerDto): Promise<object> {
+
+    try {
+
+      await this.userService.approveWorker(approveWorkerDto);
+
+      return { message: 'Worker approved successfully'};
+
+    } catch (error) {
+      throw new InternalServerErrorException('Error approving worker');
+    };
+  };
+
+};
