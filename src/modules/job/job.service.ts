@@ -4,8 +4,7 @@ import { CreateJobDTO } from './dto/create-job.dto';
 import { Job } from './job.model';
 import { JobQueryParamsDto } from './dto/job-query-params.dto';
 import { JobApplicationDTO } from './dto/job-application.dto';
-import { WorkerRepository } from 'modules/worker/repositories/worker.repository'; 
-import { ConfirmJobDTO } from './dto/confirm-job.dto';
+import { WorkerRepository } from 'modules/worker/repositories/worker.repository';
 
 @Injectable()
 export class JobService {
@@ -36,8 +35,8 @@ export class JobService {
     }
   }
 
-  async applyForJob(jobApplicationDTO: JobApplicationDTO): Promise<void> {
-    const { jobId, workerId } = jobApplicationDTO;
+  async applyForJob(jobId: number, jobApplicationDTO: JobApplicationDTO): Promise<void> {
+    const { workerId } = jobApplicationDTO;
 
     const worker = await this.workerRepository.findWorkerById(workerId);
     if (!worker || !worker.verifiedByAdmin) {
@@ -52,8 +51,7 @@ export class JobService {
     }
   }
 
-  async confirmJob(confirmJobDTO: ConfirmJobDTO, userId: number): Promise<void> {
-    const { jobId } = confirmJobDTO;
+  async confirmJob(jobId: number, userId: number): Promise<void> {
     const job = await this.jobRepository.findById(jobId);
 
     if (!job) {

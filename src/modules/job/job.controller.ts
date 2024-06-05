@@ -1,11 +1,10 @@
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Query, UseGuards, HttpException, HttpStatus, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UsePipes, ValidationPipe, Query, UseGuards, HttpException, HttpStatus, Req, Param } from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDTO } from './dto/create-job.dto';
 import { JwtUserGuard } from 'common/guards/jwt-user.guard';
 import { Job } from './job.model';
 import { JobQueryParamsDto } from './dto/job-query-params.dto';
 import { JobApplicationDTO } from './dto/job-application.dto';
-import { ConfirmJobDTO } from './dto/confirm-job.dto';
 
 @Controller('job')
 export class JobController {
@@ -47,11 +46,11 @@ export class JobController {
     }
   }
 
-  @Post('apply')
+  @Patch(':id/apply')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async applyForJob(@Body() jobApplicationDTO: JobApplicationDTO): Promise<{ message: string }> {
+  async applyForJob(@Param('id') jobId: number, @Body() jobApplicationDTO: JobApplicationDTO): Promise<{ message: string }> {
     try {
-      await this.jobService.applyForJob(jobApplicationDTO);
+      await this.jobService.applyForJob(jobId, jobApplicationDTO);
       return { message: 'Application successful' };
     } catch (error) {
       console.error('Error applying for job:', error);
@@ -65,13 +64,12 @@ export class JobController {
     }
   }
 
-  @Post('confirm')
+  @Patch(':id/confirm')
   @UseGuards(JwtUserGuard)
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async confirmJob(@Body() confirmJobDTO: ConfirmJobDTO, @Req() req): Promise<{ message: string }> {
+  async confirmJob(@Param('id') jobId: number, @Req() req): Promise<{ message: string }> {
     try {
       const userId = req.user.id;
-      await this.jobService.confirmJob(confirmJobDTO, userId);
+      await this.jobService.confirmJob(jobId, userId);
       return { message: 'Job successfully confirmed' };
     } catch (error) {
       console.error('Error confirming job:', error);
