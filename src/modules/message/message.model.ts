@@ -1,5 +1,5 @@
 import { Job } from "modules/job/job.model";
-import { User } from "modules/user/user.model";
+import { User } from "modules/user/models/user.model";
 import { Worker } from "modules/worker/models/worker.model";
 import { Model, Column, DataType, Table, ForeignKey } from "sequelize-typescript";
 

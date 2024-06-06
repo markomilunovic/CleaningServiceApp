@@ -2,7 +2,7 @@ import { Injectable, ConflictException, InternalServerErrorException, Inject } f
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
-import { User } from './user.model';
+import { User } from '../models/user.model';
 import { VerificationTokenRepository } from 'modules/auth/repositories/verification-token.repository';
 
 @Injectable()

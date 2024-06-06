@@ -1,7 +1,7 @@
 import { AuthResponse } from 'common/interfaces/auth-response.interface';
 import { UserResponseDto } from 'modules/user/dtos/user-response.dto';
 
-export class LoginResponseDto {
+export class LoginUserResponseDto {
   accessToken: string;
   refreshToken: string;
   accessTokenExpiresAt: Date;

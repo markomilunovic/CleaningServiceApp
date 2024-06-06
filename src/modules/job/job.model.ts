@@ -1,5 +1,5 @@
 import { Column, Model, Table, DataType, ForeignKey } from 'sequelize-typescript';
-import { User } from 'modules/user/user.model';
+import { User } from 'modules/user/models/user.model';
 import { Worker } from 'modules/worker/models/worker.model';
 
 @Table({ tableName: 'job' })

@@ -8,6 +8,10 @@ import { ForgotPasswordWorkerDto } from '../dtos/worker/forgot-password-worker.d
 import { ResetPasswordWorkerDto } from '../dtos/worker/reset-password-worker.dto';
 import { VerifyWorkerEmailDto } from '../dtos/worker/verify-worker-email.dto';
 import { ConfirmWorkerEmailDto } from '../dtos/worker/confirm-worker-email.dto';
+import { ResponseDto } from 'common/dto/response.dto';
+import { WorkerResponseDto } from '../dtos/worker/worker.response.dto';
+import { LoginWorkerResponseDto } from '../dtos/worker/login-worker-response.dto';
+import { LoginWorkerType } from '../utils/worker-types';
 
 
 @Controller('auth-worker')
@@ -19,8 +23,8 @@ export class AuthWorkerController {
     @Post('register')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
     @UseInterceptors(FilesInterceptor('files', 2))
-    async registerWorker(@UploadedFiles() files: Express.Multer.File[], @Body() registerWorkerDto: RegisterWorkerDto): Promise<object> {
-      console.log('registerWorker - registerWorkerDto:', registerWorkerDto);
+    async registerWorker(@UploadedFiles() files: Express.Multer.File[], @Body() registerWorkerDto: RegisterWorkerDto): Promise<ResponseDto<WorkerResponseDto>> {
+
         try{
 
             if (files.length !== 2) {
@@ -31,7 +35,8 @@ export class AuthWorkerController {
 
             const worker = await this.authWorkerService.registerWorker(registerWorkerDto, idCardPhotoFront.path, idCardPhotoBack.path);
 
-            return { message: 'Worker registered successfully', worker };
+            return new ResponseDto(new WorkerResponseDto(worker), 'Worker registered successfully');
+
         } catch (error) {
             if (error instanceof BadRequestException) {
                 throw error;
@@ -48,23 +53,19 @@ export class AuthWorkerController {
 
     @Get('google/callback')
     @UseGuards(AuthGuard('google-worker'))
-    async googleAuthRedirect(@Req() req) {
+    async googleAuthRedirect(@Req() req): Promise<ResponseDto<LoginWorkerResponseDto>> {
         if (!req.user) {
             throw new UnauthorizedException('No worker data from Google');
         };
 
-        const loginWorkerType = {
+        const loginWorkerType: LoginWorkerType = {
             email: req.user.email,
             password: null // No password for OAuth logins
         };
 
         const { accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerType);
-        return {
-            message: 'Google authentication successful',
-            accessToken,
-            refreshToken,
-            worker
-        };
+
+        return new ResponseDto(new LoginWorkerResponseDto(accessToken, refreshToken, worker), 'Google authentication successful');
     };
 
     @Get('facebook')
@@ -73,33 +74,30 @@ export class AuthWorkerController {
 
     @Get('facebook/callback')
     @UseGuards(AuthGuard('facebook-worker'))
-    async facebookAuthRedirect(@Req() req) {
+    async facebookAuthRedirect(@Req() req): Promise<ResponseDto<LoginWorkerResponseDto>> {
       if (!req.user) {
         throw new UnauthorizedException('No worker data from Google');
     };
 
-    const loginWorkerType = {
+    const loginWorkerType: LoginWorkerType = {
         email: req.user.email,
         password: null // No password for OAuth logins
     };
 
     const { accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerType);
-    return {
-        message: 'Facebook authentication successful',
-        accessToken,
-        refreshToken,
-        worker
-    };
+
+    return new ResponseDto(new LoginWorkerResponseDto(accessToken, refreshToken, worker), 'Facebook authentication successful');
     };
 
     @Post('login')
     @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-    async loginWorker(@Body() loginWorkerDto: LoginWorkerDto): Promise<{ accessToken: string; refreshToken: string; worker: object }> {
+    async loginWorker(@Body() loginWorkerDto: LoginWorkerDto): Promise<ResponseDto<LoginWorkerResponseDto>> {
       console.log('loginWorker - loginWorkerDto:', loginWorkerDto);
       try {
 
         const {accessToken, refreshToken, worker } = await this.authWorkerService.loginWorker(loginWorkerDto);
-        return { accessToken, refreshToken, worker };
+
+        return new ResponseDto(new LoginWorkerResponseDto(accessToken, refreshToken, worker), 'Login successful');
 
       } catch (error) {
         throw new HttpException('Error logging in', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -109,12 +107,13 @@ export class AuthWorkerController {
 
     @Post('forgot-password')
     @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
-    async forgotPassword(@Body() forgotPasswordWorkerDto: ForgotPasswordWorkerDto): Promise<object> {
+    async forgotPassword(@Body() forgotPasswordWorkerDto: ForgotPasswordWorkerDto): Promise<ResponseDto<null>> {
 
         try{
 
             await this.authWorkerService.forgotPassword(forgotPasswordWorkerDto);
-            return { message: 'Reset password link sent to your email' }
+
+            return new ResponseDto(null, 'Reset password link sent to your email');
 
         } catch(error) {
             throw new HttpException('Failed to process forgot password request', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -123,11 +122,13 @@ export class AuthWorkerController {
 
     @Post('reset-password')
     @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
-    async resetPassword(@Body() resetPasswordWorkerDto: ResetPasswordWorkerDto): Promise<object> {
+    async resetPassword(@Body() resetPasswordWorkerDto: ResetPasswordWorkerDto): Promise<ResponseDto<null>> {
 
         try{
             await this.authWorkerService.resetPassword(resetPasswordWorkerDto);
-            return { message: 'Password reset successful' };
+
+            return new ResponseDto(null, 'Password reset successful');
+
         } catch(error) {
             console.log(error)
             throw new HttpException('Failed to reset password', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -136,12 +137,13 @@ export class AuthWorkerController {
 
     @Post('verify-email')
     @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
-    async verifyEmail(@Body() verifyWorkerEmailDto: VerifyWorkerEmailDto): Promise<object> {
+    async verifyEmail(@Body() verifyWorkerEmailDto: VerifyWorkerEmailDto): Promise<ResponseDto<null>> {
 
         try{
 
             await this.authWorkerService.verifyEmail(verifyWorkerEmailDto);
-            return { message: 'Email verification link sent to your email' }
+
+            return new ResponseDto(null, 'Email verification link sent to your email');
 
         } catch(error) {
             throw new HttpException('Failed to process email verification request', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -150,18 +152,18 @@ export class AuthWorkerController {
 
     @Post('confirm-email')
     @UsePipes(new ValidationPipe( {whitelist: true, forbidNonWhitelisted: true}))
-    async confirmEmail(@Body() confirmWorkerEmailDto: ConfirmWorkerEmailDto): Promise<object> {
+    async confirmEmail(@Body() confirmWorkerEmailDto: ConfirmWorkerEmailDto): Promise<ResponseDto<null>> {
 
         try{
             await this.authWorkerService.confirmEmail(confirmWorkerEmailDto);
-            return { message: 'Email verification successful' };
+
+            return new ResponseDto(null, 'Email verification successful');
+
         } catch(error) {
             console.log(error)
             throw new HttpException('Failed to verify email', HttpStatus.INTERNAL_SERVER_ERROR);
         };
     };
-
-
 };
 
 

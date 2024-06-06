@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
-import { User } from 'modules/user/user.model';
+import { User } from 'modules/user/models/user.model';
 import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
 import { Transaction } from 'modules/transaction/transaction.model';

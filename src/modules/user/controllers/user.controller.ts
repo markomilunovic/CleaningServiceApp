@@ -6,21 +6,21 @@ import {
   ValidationPipe,
   Patch
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { EditUserDto } from './dtos/edit-user.dto';
-import { ForgotPasswordDto } from './dtos/forgot-password.dto';
-import { ConfirmResetPasswordDto } from './dtos/confirm-reset-password.dto';
+import { UserService } from '../services/user.service';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { EditUserDto } from '../dtos/edit-user.dto';
+import { ForgotPasswordDto } from '../dtos/forgot-password.dto';
+import { ConfirmResetPasswordDto } from '../dtos/confirm-reset-password.dto';
 import { JwtUserGuard } from 'common/guards/jwt-user.guard';
-import { EmailVerificationService } from './email-verification.service';
+import { EmailVerificationService } from '../services/email-verification.service';
 import { Roles } from 'common/decorators/roles.decorator';
-import { Worker } from 'modules/worker/models/worker.model';
 import { RolesGuard } from 'common/guards/roles.guard';
-import { Job } from 'modules/job/job.model';
 import { ResponseDto } from 'common/dto/response.dto';
-import { UserResponseDto } from './dtos/user-response.dto';
-import { ApproveWorkerDto } from './dtos/approve-worker.dto';
-import { ApproveJobDto } from './dtos/approve.job.dto';
+import { UserResponseDto } from '../dtos/user-response.dto';
+import { ApproveWorkerDto } from '../dtos/approve-worker.dto';
+import { ApproveJobDto } from '../dtos/approve.job.dto';
+import { WorkerResponseDto } from 'modules/auth/dtos/worker/worker.response.dto';
+import { JobResponseDto } from 'modules/job/dto/job-response.dto';
 
 
 @Controller('api/user')
@@ -108,16 +108,18 @@ export class UserController {
   @Get('workers')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
-  async getAllWorkers(): Promise<Worker[]> {
+  async getAllWorkers(): Promise<ResponseDto<WorkerResponseDto[]>> {
     try {
-      
-      const workers = await this.userService.getAllWorkers();
-      return workers;
+
+        const workers = await this.userService.getAllWorkers();
+        const workerResponseDtos = workers.map(worker => new WorkerResponseDto(worker));
+
+        return new ResponseDto(workerResponseDtos, 'Workers retrieved successfully');
 
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving workers');
+        throw new InternalServerErrorException('Error retrieving workers');
     };
-  };
+};
 
 
   @Patch('approve-worker')
@@ -129,41 +131,43 @@ export class UserController {
 
       await this.userService.approveWorker(approveWorkerDto);
 
-      return { message: 'Worker approved successfully'};
+      return new ResponseDto(null, 'Worker approved successfully');
 
     } catch (error) {
       throw new InternalServerErrorException('Error approving worker');
     };
   };
 
+
   @Get('jobs')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
-  async getAllJobs(): Promise<Job[]> {
+  async getAllJobs(): Promise<ResponseDto<JobResponseDto[]>> {
     try {
       
       const jobs = await this.userService.getAllJobs();
-      return jobs;
+      const jobResonseDtos = jobs.map(job => new JobResponseDto(job));
+
+      return new ResponseDto(jobResonseDtos, 'Jobs retrieved successfully');
 
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving jobs');
     };
   };
 
+
   @Patch('approve-job')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
-  async approveJob(@Body() approveJobDto: ApproveJobDto): Promise<object> {
+  async approveJob(@Body() approveJobDto: ApproveJobDto): Promise<ResponseDto<null>> {
 
     try {
       await this.userService.approveJob(approveJobDto);
 
-      return { message: 'Job approved successfully' };
+      return new ResponseDto(null, 'Job approved successfully');
 
     } catch (error){
       throw new InternalServerErrorException('Error approving job');
     };
   };
-
-
 };

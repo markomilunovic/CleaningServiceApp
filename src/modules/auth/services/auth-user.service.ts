@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from 'modules/user/user.service';
+import { UserService } from 'modules/user/services/user.service';
 import { AccessTokenRepository } from '../repositories/access-token.repository';
 import { RefreshTokenRepository } from '../repositories/refresh-token.repository';
 import * as bcrypt from 'bcrypt';
-import { User } from 'modules/user/user.model';
+import { User } from 'modules/user/models/user.model';
 import { AuthResponse } from 'common/interfaces/auth-response.interface';
 
 @Injectable()
