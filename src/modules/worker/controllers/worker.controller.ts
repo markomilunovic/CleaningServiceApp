@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Param, Put, UploadedFiles, UseGu
 import { WorkerService } from '../services/worker.service';
 import { EditWorkerDto } from '../dtos/edit-worker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ResponseDto } from 'common/dto/response.dto';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -12,7 +13,7 @@ export class WorkerController {
   @Put('edit/:id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   @UseInterceptors(FilesInterceptor('files', 2))
-  async editWorker(@Param('id') id: string, @UploadedFiles() files: Express.Multer.File[], @Body() editWorkerDto: EditWorkerDto): Promise<object> {
+  async editWorker(@Param('id') id: string, @UploadedFiles() files: Express.Multer.File[], @Body() editWorkerDto: EditWorkerDto): Promise<ResponseDto<null>> {
     try {
       let idCardPhotoFrontUrl = null;
       let idCardPhotoBackUrl = null;
@@ -35,7 +36,8 @@ export class WorkerController {
 
       await this.workerService.editWorker(id, editWorkerDto, idCardPhotoFrontUrl, idCardPhotoBackUrl);
       
-      return { message: 'Worker updated successfully' };
+      return new ResponseDto(null, 'Worker updated successfully');
+      
     } catch (error) {
       throw new BadRequestException('Error updating worker');
     };

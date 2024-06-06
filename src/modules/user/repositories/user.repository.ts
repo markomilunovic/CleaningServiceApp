@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './user.model';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { EditUserDto } from './dtos/edit-user.dto';
+import { User } from '../models/user.model';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { EditUserDto } from '../dtos/edit-user.dto';
 import { ResetToken } from 'modules/auth/models/reset-token.model';
 import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
-import { ApproveJobType, ApproveWorkerType } from './utils/types';
+import { ApproveJobType, ApproveWorkerType } from '../utils/types';
 
 @Injectable()
 export class UserRepository {

@@ -2,18 +2,18 @@ import {
   Injectable, ConflictException, InternalServerErrorException, NotFoundException,
   Inject
 } from '@nestjs/common';
-import { UserRepository } from './user.repository';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { User } from './user.model';
+import { UserRepository } from '../repositories/user.repository';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { User } from '../models/user.model';
 import * as bcrypt from 'bcrypt';
-import { EditUserDto } from './dtos/edit-user.dto';
+import { EditUserDto } from '../dtos/edit-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email.service';
 import { EmailVerificationService } from './email-verification.service';
 import { Worker } from 'modules/worker/models/worker.model';
 import { Job } from 'modules/job/job.model';
-import { ApproveJobType, ApproveWorkerType } from './utils/types';
+import { ApproveJobType, ApproveWorkerType } from '../utils/types';
 
 @Injectable()
 export class UserService {

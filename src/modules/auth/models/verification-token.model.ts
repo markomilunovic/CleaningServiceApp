@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
-import { User } from '../../user/user.model';
+import { User } from '../../user/models/user.model';
 import { Worker } from 'modules/worker/models/worker.model';
 
 @Table({ tableName: 'verification_token' })
