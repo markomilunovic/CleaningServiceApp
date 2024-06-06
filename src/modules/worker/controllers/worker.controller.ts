@@ -3,6 +3,7 @@ import { WorkerService } from '../services/worker.service';
 import { EditWorkerDto } from '../dtos/edit-worker.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ResponseDto } from 'common/dto/response.dto';
+import { JwtWorkerGuard } from 'common/guards/jwt-worker.guard';
 
 let fileCount = 0; // Global counter to track file order
 
@@ -12,6 +13,7 @@ export class WorkerController {
 
   @Put('edit/:id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  @UseGuards(JwtWorkerGuard)
   @UseInterceptors(FilesInterceptor('files', 2))
   async editWorker(@Param('id') id: string, @UploadedFiles() files: Express.Multer.File[], @Body() editWorkerDto: EditWorkerDto): Promise<ResponseDto<null>> {
     try {

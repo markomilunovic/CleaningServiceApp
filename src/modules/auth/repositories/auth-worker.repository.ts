@@ -21,6 +21,10 @@ export class AuthWorkerRepository {
         return Worker.findOne({ where: { email } });
     };
 
+    async findWorkerById(id: number): Promise<Worker | null> {
+        return Worker.findOne({ where: { id } });
+    };
+
     async createAccessToken(workerId: number, accessTokenExpiresAt: Date): Promise<AccessToken> {
 
         const token = await AccessToken.create({ workerId: workerId, expiresAt: accessTokenExpiresAt });

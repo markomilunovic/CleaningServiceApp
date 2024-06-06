@@ -22,6 +22,7 @@ import { AuthWorkerController } from "./controllers/auth-worker.controller";
 import { EmailService } from "./services/email.service";
 import { MulterModule } from "@nestjs/platform-express";
 import { MulterConfigService } from "config/multer.provider";
+import { JwtWorkerStrategy } from "./strategies/worker/jwt-worker.strategy";
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { MulterConfigService } from "config/multer.provider";
     AuthUserService,
     AuthWorkerService,
     JwtUserStrategy,
+    JwtWorkerStrategy,
     GoogleUserStrategy,
     GoogleWorkerStrategy,
     FacebookUserStrategy,

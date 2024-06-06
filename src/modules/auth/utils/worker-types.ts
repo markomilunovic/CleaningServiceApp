@@ -65,4 +65,13 @@ export type ConfirmWorkerEmailType = {
     token: string;
 };
 
+export type JwtPayloadType = {
+    accessTokenEncode: AccessTokneEncodeType;
+    iat: number;
+    exp: number;
+};
+
+
+
+
 
