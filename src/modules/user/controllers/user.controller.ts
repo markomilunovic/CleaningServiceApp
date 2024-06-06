@@ -146,9 +146,9 @@ export class UserController {
     try {
       
       const jobs = await this.userService.getAllJobs();
-      const jobResonseDtos = jobs.map(job => new JobResponseDto(job));
+      const jobResponseDtos = jobs.map(job => new JobResponseDto(job));
 
-      return new ResponseDto(jobResonseDtos, 'Jobs retrieved successfully');
+      return new ResponseDto(jobResponseDtos, 'Jobs retrieved successfully');
 
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving jobs');

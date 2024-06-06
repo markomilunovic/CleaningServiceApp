@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SendMessageType } from '../utils/types';
+import { SendMessageType, VisualiseMessagesType } from '../utils/types';
 import { Message } from '../models/message.model';
 
 @Injectable()
@@ -16,5 +16,20 @@ export class MessageRepository {
                                jobId: jobId,
                                content: content 
                             });
+    };
+
+
+    async findMessagesBetween(visualiseMessagesType: VisualiseMessagesType, senderId: number, senderType: 'user' | 'worker'): Promise<Message[]> {
+
+        const { receiverId, receiverType } = visualiseMessagesType;
+
+        return Message.findAll({
+            where: {
+                senderId,
+                senderType,
+                receiverId,
+                receiverType
+            }
+        });
     };
 };
