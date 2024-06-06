@@ -17,17 +17,15 @@ export class JwtWorkerStrategy extends PassportStrategy(Strategy, 'jwt-worker') 
       ignoreExpiration: false,
       secretOrKey: configService.get('ACCESS_TOKEN_SECRET'),
     });
-  };
+  }
 
   async validate(payload: JwtPayloadType): Promise<Worker> {
-
     const worker = await this.authWorkerRepository.findWorkerById(payload.accessTokenEncode.sub);
 
     if (!worker) {
       throw new NotFoundException('Worker not found');
-    };
+    }
 
     return worker;
-
-  };
-};
+  }
+}

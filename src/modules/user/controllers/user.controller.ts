@@ -4,6 +4,7 @@ import {
   Query, NotFoundException,
   UsePipes,
   ValidationPipe,
+  ParseIntPipe,
   Patch
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
@@ -21,7 +22,6 @@ import { ApproveWorkerDto } from '../dtos/approve-worker.dto';
 import { ApproveJobDto } from '../dtos/approve.job.dto';
 import { WorkerResponseDto } from 'modules/auth/dtos/worker/worker.response.dto';
 import { JobResponseDto } from 'modules/job/dto/job-response.dto';
-
 
 @Controller('api/user')
 export class UserController {
@@ -47,7 +47,7 @@ export class UserController {
   @Put(':id/edit')
   @UseGuards(JwtUserGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async editUser(@Param('id') id: number, @Body() editUserDto: EditUserDto) {
+  async editUser(@Param('id', ParseIntPipe) id: number, @Body() editUserDto: EditUserDto) {
     try {
       const updatedUser = await this.userService.updateUser(id, editUserDto);
       if (!updatedUser) {
@@ -61,7 +61,7 @@ export class UserController {
 
   @Get('profile/:id')
   @UseGuards(JwtUserGuard)
-  async getUser(@Param('id') id: number) {
+  async getUser(@Param('id', ParseIntPipe) id: number) {
     try {
       const user = await this.userService.findUserById(id);
       if (!user) {
@@ -110,64 +110,48 @@ export class UserController {
   @Roles('admin')
   async getAllWorkers(): Promise<ResponseDto<WorkerResponseDto[]>> {
     try {
-
-        const workers = await this.userService.getAllWorkers();
-        const workerResponseDtos = workers.map(worker => new WorkerResponseDto(worker));
-
-        return new ResponseDto(workerResponseDtos, 'Workers retrieved successfully');
-
+      const workers = await this.userService.getAllWorkers();
+      const workerResponseDtos = workers.map(worker => new WorkerResponseDto(worker));
+      return new ResponseDto(workerResponseDtos, 'Workers retrieved successfully');
     } catch (error) {
-        throw new InternalServerErrorException('Error retrieving workers');
-    };
-};
-
+      throw new InternalServerErrorException('Error retrieving workers');
+    }
+  }
 
   @Patch('approve-worker')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async approveWorker(@Body() approveWorkerDto: ApproveWorkerDto): Promise<object> {
-
     try {
-
       await this.userService.approveWorker(approveWorkerDto);
-
       return new ResponseDto(null, 'Worker approved successfully');
-
     } catch (error) {
       throw new InternalServerErrorException('Error approving worker');
-    };
-  };
-
+    }
+  }
 
   @Get('jobs')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async getAllJobs(): Promise<ResponseDto<JobResponseDto[]>> {
     try {
-      
       const jobs = await this.userService.getAllJobs();
-      const jobResonseDtos = jobs.map(job => new JobResponseDto(job));
-
-      return new ResponseDto(jobResonseDtos, 'Jobs retrieved successfully');
-
+      const jobResponseDtos = jobs.map(job => new JobResponseDto(job));
+      return new ResponseDto(jobResponseDtos, 'Jobs retrieved successfully');
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving jobs');
-    };
-  };
-
+    }
+  }
 
   @Patch('approve-job')
   @UseGuards(JwtUserGuard, RolesGuard)
   @Roles('admin')
   async approveJob(@Body() approveJobDto: ApproveJobDto): Promise<ResponseDto<null>> {
-
     try {
       await this.userService.approveJob(approveJobDto);
-
       return new ResponseDto(null, 'Job approved successfully');
-
-    } catch (error){
+    } catch (error) {
       throw new InternalServerErrorException('Error approving job');
-    };
-  };
-};
+    }
+  }
+}

@@ -13,5 +13,6 @@ import { JobController } from './job.controller';
   ],
   providers: [JobRepository, JobService],
   controllers: [JobController],
+  exports: [JobRepository],
 })
 export class JobModule {}

@@ -16,6 +16,7 @@ import { AppController } from './app.controller';
 import { AppService } from 'app.service';
 import { WorkerModule } from 'modules/worker/worker.module';
 import { JobModule } from 'modules/job/job.module';
+import { TransactionModule } from 'modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { JobModule } from 'modules/job/job.module';
     AuthModule,
     WorkerModule,
     JobModule,
+    TransactionModule,
   ],
   providers: [AppService],
   controllers: [AppController],
