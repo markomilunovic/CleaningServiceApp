@@ -2,11 +2,11 @@ import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator
 
 export class SendMessageDto {
     @IsInt()
-    @IsNotEmpty({ message: 'receiver_id is required' })
+    @IsNotEmpty({ message: 'receiverId is required' })
     receiverId: number;
 
     @IsEnum(['user', 'worker'])
-    @IsNotEmpty({ message: 'receiver_type is required' })
+    @IsNotEmpty({ message: 'receiverType is required' })
     receiverType: 'user' | 'worker';
 
     @IsInt()

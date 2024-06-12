@@ -4,3 +4,8 @@ export type SendMessageType = {
     jobId?: number;
     content: string;
 };
+
+export type VisualiseMessagesType = {
+    receiverId: number;
+    receiverType: 'user' | 'worker';
+};

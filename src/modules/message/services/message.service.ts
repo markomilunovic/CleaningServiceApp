@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { MessageRepository } from '../repositories/message.repository';
-import { SendMessageType } from '../utils/types';
+import { SendMessageType, VisualiseMessagesType } from '../utils/types';
 import { JobRepository } from 'modules/job/job.repository';
+import { Message } from '../models/message.model';
 
 @Injectable()
 export class MessageService {
@@ -24,6 +25,14 @@ export class MessageService {
         };
 
         await this.messageRepository.sendMessage(sendMessageType, senderId, senderType);
+
+    };
+
+    async visualiseMessages(visualiseMessagesType: VisualiseMessagesType, senderId: number, senderType: 'user' | 'worker'): Promise<Message[]> {
+
+        const messages = await this.messageRepository.findMessagesBetween(visualiseMessagesType, senderId, senderType);
+
+        return messages;
 
     };
 };
