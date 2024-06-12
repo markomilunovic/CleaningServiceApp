@@ -53,7 +53,7 @@ export class JobRepository {
     }
   }
 
-  async findById(jobId: number): Promise<Job> {
+  async findJobById(jobId: number): Promise<Job> {
     try {
       return await this.jobModel.findByPk(jobId);
     } catch (error) {

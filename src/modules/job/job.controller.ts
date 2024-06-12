@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, UsePipes, ValidationPipe, Query, UseGuards, HttpException, HttpStatus, Req, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UsePipes, ValidationPipe, Query, UseGuards, HttpException, HttpStatus, Req, Param, ParseIntPipe } from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDTO } from './dto/create-job.dto';
 import { JwtUserGuard } from 'common/guards/jwt-user.guard';
 import { JobQueryParamsDto } from './dto/job-query-params.dto';
-import { JobApplicationDTO } from './dto/job-application.dto';
 import { ResponseDto } from 'common/dto/response.dto';
 import { JobResponseDto } from './dto/job-response.dto';
+import { JwtWorkerGuard } from 'common/guards/jwt-worker.guard';
 
 @Controller('job')
 export class JobController {
@@ -32,6 +32,7 @@ export class JobController {
   }
 
   @Get('list')
+  @UseGuards(JwtWorkerGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
   async getJobs(@Query() query: JobQueryParamsDto): Promise<ResponseDto<{ rows: JobResponseDto[]; count: number }>> {
     try {
@@ -50,11 +51,13 @@ export class JobController {
   }
 
   @Patch(':id/apply')
+  @UseGuards(JwtWorkerGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async applyForJob(@Param('id') jobId: number, @Body() jobApplicationDTO: JobApplicationDTO): Promise<ResponseDto<{ message: string }>> {
+  async applyForJob(@Param('id', ParseIntPipe) jobId: number, @Req() req): Promise<ResponseDto<null>> {
     try {
-      await this.jobService.applyForJob(jobId, jobApplicationDTO);
-      return new ResponseDto({ message: 'Application successful' }, 'Job application submitted successfully');
+      const workerId = req.user.id;
+      await this.jobService.applyForJob(jobId, workerId);
+      return new ResponseDto(null, 'Job application submitted successfully');
     } catch (error) {
       console.error('Error applying for job:', error);
       throw new HttpException(
@@ -69,11 +72,12 @@ export class JobController {
 
   @Patch(':id/confirm')
   @UseGuards(JwtUserGuard)
-  async confirmJob(@Param('id') jobId: number, @Req() req): Promise<ResponseDto<{ message: string }>> {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async confirmJob(@Param('id', ParseIntPipe) jobId: number, @Req() req): Promise<ResponseDto<null>> {
     try {
       const userId = req.user.id;
       await this.jobService.confirmJob(jobId, userId);
-      return new ResponseDto({ message: 'Job successfully confirmed' }, 'Job confirmation successful');
+      return new ResponseDto(null, 'Job confirmation successful');
     } catch (error) {
       console.error('Error confirming job:', error);
       throw new HttpException(
