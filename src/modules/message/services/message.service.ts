@@ -17,7 +17,7 @@ export class MessageService {
         const { jobId } = sendMessageType;
 
         if (jobId !== undefined) { 
-            const job = await this.jobRepository.findById(jobId);
+            const job = await this.jobRepository.findJobById(jobId);
 
             if (!job) {
                 throw new NotFoundException('Job does not exist');
