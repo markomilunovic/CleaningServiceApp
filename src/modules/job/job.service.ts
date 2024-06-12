@@ -3,7 +3,6 @@ import { JobRepository } from './job.repository';
 import { CreateJobDTO } from './dto/create-job.dto';
 import { Job } from './job.model';
 import { JobQueryParamsDto } from './dto/job-query-params.dto';
-import { JobApplicationDTO } from './dto/job-application.dto';
 import { WorkerRepository } from 'modules/worker/repositories/worker.repository';
 
 @Injectable()
@@ -35,9 +34,7 @@ export class JobService {
     }
   }
 
-  async applyForJob(jobId: number, jobApplicationDTO: JobApplicationDTO): Promise<void> {
-    const { workerId } = jobApplicationDTO;
-
+  async applyForJob(jobId: number, workerId: number): Promise<void> {
     const worker = await this.workerRepository.findWorkerById(workerId);
     if (!worker || !worker.verifiedByAdmin) {
       throw new BadRequestException('Worker is not verified');
@@ -52,7 +49,7 @@ export class JobService {
   }
 
   async confirmJob(jobId: number, userId: number): Promise<void> {
-    const job = await this.jobRepository.findById(jobId);
+    const job = await this.jobRepository.findJobById(jobId);
 
     if (!job) {
       throw new BadRequestException('Job not found');

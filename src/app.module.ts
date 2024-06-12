@@ -17,6 +17,7 @@ import { AppService } from 'app.service';
 import { WorkerModule } from 'modules/worker/worker.module';
 import { JobModule } from 'modules/job/job.module';
 import { MessageModule } from 'modules/message/message.module';
+import { TransactionModule } from 'modules/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { MessageModule } from 'modules/message/message.module';
     AuthModule,
     WorkerModule,
     JobModule,
-    MessageModule
+    MessageModule,
+    TransactionModule,
   ],
   providers: [AppService],
   controllers: [AppController],
