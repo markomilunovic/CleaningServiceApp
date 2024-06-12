@@ -17,7 +17,14 @@ export class Message extends Model<Message> {
         allowNull: false,
         field: 'sender_id'
     })
-    sender_id: number;
+    senderId: number;
+
+    @Column({
+        type: DataType.ENUM('user', 'worker'),
+        allowNull: false,
+        field: 'sender_type'
+    })
+    senderType: 'user' | 'worker';
 
     @ForeignKey(() => Worker)
     @Column({
@@ -25,15 +32,22 @@ export class Message extends Model<Message> {
         allowNull: false,
         field: 'receiver_id'
     })
-    receiver_id: number;
+    receiverId: number;
+
+    @Column({
+        type: DataType.ENUM('user', 'worker'),
+        allowNull: false,
+        field: 'receiver_type'
+    })
+    receiverType: 'user' | 'worker';
 
     @ForeignKey(() => Job)
     @Column({
         type: DataType.INTEGER,
-        allowNull: false,
+        allowNull: true,
         field: 'job_id'
     })
-    job_id: number;
+    jobId: number;
 
     @Column({
         type: DataType.STRING,

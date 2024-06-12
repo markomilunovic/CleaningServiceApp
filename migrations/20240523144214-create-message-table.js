@@ -13,13 +13,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      sender_type: {
+        type: Sequelize.ENUM('user', "worker"),
+        allowNull: false,
+      },
       receiver_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      receiver_type: {
+        type: Sequelize.ENUM('user', 'worker'),
+        allowNull: false
+      },
       job_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       content: {
         type: Sequelize.INTEGER,
