@@ -1,5 +1,5 @@
 import { Model, Column, DataType, ForeignKey, Table } from "sequelize-typescript";
-import { AccessToken } from "./accessToken.model";
+import { AccessToken } from "./access-token.model";
 
 @Table({ tableName: 'refresh_token' })
 export class RefreshToken extends Model<RefreshToken> {
@@ -12,40 +12,40 @@ export class RefreshToken extends Model<RefreshToken> {
 
     @ForeignKey(() => AccessToken)
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.UUID,
         allowNull: false,
         field: 'access_token_id'
     })
-    access_token_id: number;
+    accessTokenId: string;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
+        defaultValue: false,
         field: 'is_revoked'
+      })
+    isRevoked: boolean;
+    
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+        field: 'expires_at'
     })
-    is_revoked: boolean;
+    expiresAt: Date;
+
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+        defaultValue: DataType.NOW,
+        field: 'created_at',
+    })
+    createdAt: Date;
     
     @Column({
         type: DataType.DATE,
         allowNull: false,
         defaultValue: DataType.NOW,
-        field: 'created_at'
+        field: 'updated_at',
     })
-    created_at: Date;
-
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'updated_at'
-    })
-    updated_at: Date;
-
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-        defaultValue: DataType.NOW,
-        field: 'expires_at'
-    })
-    expires_at: Date;
+    updatedAt: Date;
 };

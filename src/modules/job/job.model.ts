@@ -1,6 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey } from 'sequelize-typescript';
-import { User } from 'modules/user/user.model';
-import { Worker } from 'modules/worker/worker.model';
+import { User } from 'modules/user/models/user.model';
+import { Worker } from 'modules/worker/models/worker.model';
 
 @Table({ tableName: 'job' })
 export class Job extends Model<Job> {
@@ -14,7 +14,7 @@ export class Job extends Model<Job> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
+    allowNull: true,
     field: 'user_id',
   })
   userId: number;
@@ -97,6 +97,13 @@ export class Job extends Model<Job> {
     allowNull: false,
   })
   municipality: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  })
+  approvedByAdmin: boolean;
 
   @Column({
     type: DataType.DATE,

@@ -6,12 +6,12 @@ module.exports = {
     await queryInterface.createTable('refresh_token', {
       id: {
         type: Sequelize.UUID,
-        autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
       },
 
       access_token_id: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'access_token',
@@ -23,9 +23,16 @@ module.exports = {
 
       is_revoked: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
+        allowNull: false,
+        defaultValue: false
       },
 
+      expires_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW
+      },
+      
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -37,13 +44,7 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-
-      expires_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.NOW
-      }
-    })
+    });
   },
 
   async down (queryInterface, Sequelize) {

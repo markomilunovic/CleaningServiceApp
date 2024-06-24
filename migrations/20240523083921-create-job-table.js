@@ -10,7 +10,7 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'user',
           key: 'id',
@@ -26,7 +26,7 @@ module.exports = {
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
       },
       description: {
         type: Sequelize.STRING,
@@ -71,6 +71,11 @@ module.exports = {
       municipality: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      approvedByAdmin: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       created_at: {
         type: Sequelize.DATE,

@@ -76,12 +76,11 @@ export class User extends Model<User> {
   password: string;
 
   @Column({
-    type: DataType.ENUM,
-    values: ['user', 'admin'],
-    allowNull: false,
-    defaultValue: 'user',
+    type: DataType.ENUM('user', 'admin'),
+    allowNull: false, 
+    defaultValue: 'user', 
   })
-  role: string;
+  role: 'user' | 'admin';
 
   @Column({
     type: DataType.BOOLEAN,
