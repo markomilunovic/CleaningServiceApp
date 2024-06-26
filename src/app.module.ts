@@ -18,6 +18,7 @@ import { WorkerModule } from 'modules/worker/worker.module';
 import { JobModule } from 'modules/job/job.module';
 import { MessageModule } from 'modules/message/message.module';
 import { TransactionModule } from 'modules/transaction/transaction.module';
+import { ChatModule } from 'chat/chat.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { TransactionModule } from 'modules/transaction/transaction.module';
     JobModule,
     MessageModule,
     TransactionModule,
+    ChatModule
   ],
   providers: [AppService],
   controllers: [AppController],
